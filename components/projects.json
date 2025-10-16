@@ -1,0 +1,17 @@
+[
+    {
+        "title": "Portfolio Website",
+        "description": "My personal portfolio website showcasing my coding journey! Built with modern web technologies and featuring smooth animations and a responsive design.",
+        "image": "/portfolio.png",
+        "technologies": [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Tailwind CSS",
+            "Radix UI",
+            "Lucide Icons"
+        ],
+        "github": "https://github.com/azfarj09",
+        "live": "#"
+    }
+]
