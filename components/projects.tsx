@@ -10,18 +10,33 @@ import projects from "./projects.json"
 export function Projects() {
   const [isVisible, setIsVisible] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    // Small delay to ensure proper mounting
+    const mountTimer = setTimeout(() => {
+      setIsMounted(true)
+    }, 50)
+
+    return () => clearTimeout(mountTimer)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
-          setIsVisible(true)
-          setHasAnimated(true)
+          // Add a small delay to ensure smooth animation start
+          setTimeout(() => {
+            setIsVisible(true)
+            setHasAnimated(true)
+          }, 50)
           observer.disconnect() // Stop observing once animated
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.15, rootMargin: '-20px' }, // Require more of the element to be visible
     )
 
     if (ref.current) {
@@ -29,7 +44,7 @@ export function Projects() {
     }
 
     return () => observer.disconnect()
-  }, [hasAnimated])
+  }, [hasAnimated, isMounted])
 
   return (
     <section id="projects" ref={ref} className="py-32 px-6">
