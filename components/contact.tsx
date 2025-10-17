@@ -9,13 +9,16 @@ import { Mail, MapPin, Phone, Send } from "lucide-react"
 
 export function Contact() {
   const [isVisible, setIsVisible] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !hasAnimated) {
           setIsVisible(true)
+          setHasAnimated(true)
+          observer.disconnect() // Stop observing once animated
         }
       },
       { threshold: 0.1 },
@@ -26,7 +29,7 @@ export function Contact() {
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [hasAnimated])
 
   return (
     <section id="contact" ref={ref} className="py-32 px-6 bg-card/30">

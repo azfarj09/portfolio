@@ -9,13 +9,16 @@ import projects from "./projects.json"
 
 export function Projects() {
   const [isVisible, setIsVisible] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !hasAnimated) {
           setIsVisible(true)
+          setHasAnimated(true)
+          observer.disconnect() // Stop observing once animated
         }
       },
       { threshold: 0.1 },
@@ -26,7 +29,7 @@ export function Projects() {
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [hasAnimated])
 
   return (
     <section id="projects" ref={ref} className="py-32 px-6">

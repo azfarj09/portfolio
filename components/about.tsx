@@ -4,13 +4,16 @@ import { useEffect, useRef, useState } from "react"
 
 export function About() {
   const [isVisible, setIsVisible] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !hasAnimated) {
           setIsVisible(true)
+          setHasAnimated(true)
+          observer.disconnect() // Stop observing once animated
         }
       },
       { threshold: 0.1 },
@@ -21,7 +24,7 @@ export function About() {
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [hasAnimated])
 
   return (
     <section id="about" ref={ref} className="py-32 px-6">
