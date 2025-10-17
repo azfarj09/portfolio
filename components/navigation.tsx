@@ -30,7 +30,16 @@ export function Navigation() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out">
+    <>
+      {/* Mobile menu overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-background/20 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out">
       <div 
         className={`transition-all duration-500 ease-out ${
           isScrolled 
@@ -68,28 +77,42 @@ export function Navigation() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className={`md:hidden transition-all duration-200 hover:bg-accent/50 ${
+                isMobileMenuOpen ? 'bg-accent/30' : ''
+              }`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              <div className="relative">
+                <Menu className={`h-5 w-5 transition-all duration-200 ${
+                  isMobileMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
+                }`} />
+                <X className={`h-5 w-5 absolute inset-0 transition-all duration-200 ${
+                  isMobileMenuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
+                }`} />
+              </div>
             </Button>
           </div>
         </div>
       </div>
       
       {/* Mobile menu */}
-      {isMobileMenuOpen && (
-        <div className={`md:hidden transition-all duration-300 ${
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${
+        isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className={`transition-all duration-300 ${
           isScrolled 
-            ? "max-w-4xl mx-auto mt-2 px-6 py-4 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-lg" 
-            : "bg-background/95 backdrop-blur-md border-b border-border"
+            ? "max-w-4xl mx-auto mt-2 px-6 py-6 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl" 
+            : "mx-6 mt-2 px-6 py-6 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl"
         }`}>
-          <div className="flex flex-col space-y-4">
-            {navItems.map((item) => (
+          <div className="flex flex-col space-y-1">
+            {navItems.map((item, index) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-2"
+                className={`text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200 py-3 px-4 rounded-lg font-medium transform hover:translate-x-1 ${
+                  isMobileMenuOpen ? 'animate-fade-in-up' : ''
+                }`}
+                style={{ animationDelay: `${index * 100}ms` }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.name}
@@ -97,7 +120,8 @@ export function Navigation() {
             ))}
           </div>
         </div>
-      )}
+      </div>
     </nav>
+    </>
   )
 }
