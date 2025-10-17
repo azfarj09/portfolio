@@ -33,7 +33,7 @@ export function Projects() {
       <div className="max-w-7xl mx-auto">
         <div className={`text-center mb-16 ${isVisible ? "opacity-100 animate-fade-in-up" : "opacity-0"}`}>
           <div className="text-sm text-primary font-mono uppercase tracking-wider mb-4">Projects</div>
-          <h2 className="text-4xl md:text-5xl font-bold text-balance">My Projects</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">My Projects</h2>
           <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
             Here are some projects I've built while learning to code! Each one taught me something new and helped me grow as a developer.
           </p>
@@ -43,42 +43,53 @@ export function Projects() {
           {projects.map((project, index) => (
             <Card
               key={index}
-              className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
-                isVisible ? `opacity-100 animate-fade-in-up` : "opacity-0"
+              className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 hover:rotate-1 cursor-pointer ${
+                isVisible ? `opacity-100 animate-scale-in-bounce` : "opacity-0"
               }`}
-              style={{ animationDelay: `${index * 0.2}s` }}
+              style={{ animationDelay: `${index * 0.3}s` }}
+              onMouseEnter={(e) => e.currentTarget.classList.add('animate-card-hover')}
+              onMouseLeave={(e) => {
+                e.currentTarget.classList.remove('animate-card-hover')
+                e.currentTarget.classList.add('animate-card-unhover')
+              }}
             >
               <div className="relative overflow-hidden">
                 <img
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
-                  className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-48 object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
                 />
-                <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-accent/20 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute top-4 right-4 w-8 h-8 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-all duration-300" />
               </div>
 
               <div className="p-6 space-y-4">
-                <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">{project.title}</h3>
+                <h3 className="text-xl font-semibold group-hover:text-primary transition-all duration-300 transform group-hover:translate-x-2">{project.title}</h3>
 
-                <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground transition-colors duration-300">{project.description}</p>
 
                 <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <Badge key={tech} variant="outline" className="text-xs">
+                  {project.technologies.map((tech, techIndex) => (
+                    <Badge 
+                      key={tech} 
+                      variant="outline" 
+                      className="text-xs hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-default"
+                      style={{ animationDelay: `${techIndex * 50}ms` }}
+                    >
                       {tech}
                     </Badge>
                   ))}
                 </div>
 
                 <div className="flex items-center gap-4 pt-4">
-                  <Button variant="ghost" size="sm" className="hover:text-primary" asChild>
+                  <Button variant="ghost" size="sm" className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300" asChild>
                     <a href={project.github} target="_blank" rel="noopener noreferrer">
-                      <Github className="h-4 w-4 mr-2" />
+                      <Github className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                       Code
                     </a>
                   </Button>
-                  <Button variant="ghost" size="sm" className="hover:text-primary">
-                    <ExternalLink className="h-4 w-4 mr-2" />
+                  <Button variant="ghost" size="sm" className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300">
+                    <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
                     Live Demo
                   </Button>
                 </div>

@@ -33,7 +33,7 @@ export function Contact() {
       <div className="max-w-6xl mx-auto">
         <div className={`text-center mb-16 ${isVisible ? "opacity-100 animate-fade-in-up" : "opacity-0"}`}>
           <div className="text-sm text-primary font-mono uppercase tracking-wider mb-4">Contact</div>
-          <h2 className="text-4xl md:text-5xl font-bold text-balance">Let's Connect!</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">Let's Connect!</h2>
           <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
             I love meeting other developers and learning new things! Whether you want to collaborate on a project, share coding tips, or just chat about tech, I'd love to hear from you.
           </p>
@@ -43,71 +43,77 @@ export function Contact() {
           {/* Contact Info */}
           <div className={`space-y-8 ${isVisible ? "opacity-100 animate-slide-in-left" : "opacity-0"}`}>
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold">Get in Touch</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-2xl font-semibold hover:text-primary transition-colors duration-300 cursor-default">Get in Touch</h3>
+              <p className="text-muted-foreground leading-relaxed hover:text-foreground transition-colors duration-300">
                 I'm always excited to connect with fellow developers, learn from others, and share what I've discovered on my coding journey. Feel free to reach out!
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 transition-colors">
-                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                  <Mail className="h-5 w-5 text-primary" />
+              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${
+                isVisible ? 'animate-slide-in-right animate-delay-200' : 'opacity-0'
+              }`}>
+                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
+                  <Mail className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
                 <div>
-                  <div className="font-medium">Email</div>
-                  <div className="text-muted-foreground">azfar.jamil@email.com</div>
+                  <div className="font-medium group-hover:text-primary transition-colors duration-300">Email</div>
+                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfar.jamil@email.com</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 transition-colors">
-                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                  <Phone className="h-5 w-5 text-primary" />
+              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${
+                isVisible ? 'animate-slide-in-right animate-delay-400' : 'opacity-0'
+              }`}>
+                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
+                  <Phone className="h-5 w-5 text-primary group-hover:-rotate-12 transition-transform duration-300" />
                 </div>
                 <div>
-                  <div className="font-medium">Phone</div>
-                  <div className="text-muted-foreground">+1 (555) 123-4567</div>
+                  <div className="font-medium group-hover:text-primary transition-colors duration-300">Phone</div>
+                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">+1 (555) 123-4567</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 transition-colors">
-                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                  <MapPin className="h-5 w-5 text-primary" />
+              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${
+                isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'
+              }`}>
+                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
+                  <MapPin className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
                 <div>
-                  <div className="font-medium">Location</div>
-                  <div className="text-muted-foreground">Toronto, Ontario</div>
+                  <div className="font-medium group-hover:text-primary transition-colors duration-300">Location</div>
+                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">Toronto, Ontario</div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <Card className={`p-8 ${isVisible ? "opacity-100 animate-fade-in-up animate-delay-400" : "opacity-0"}`}>
+          <Card className={`p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group ${isVisible ? "opacity-100 animate-scale-in-bounce animate-delay-400" : "opacity-0"}`}>
             <form className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Name</label>
-                  <Input placeholder="Your name" />
+                <div className={`space-y-2 ${isVisible ? 'animate-slide-in-left animate-delay-600' : 'opacity-0'}`}>
+                  <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Name</label>
+                  <Input placeholder="Your name" className="hover:border-primary/50 focus:scale-105 transition-all duration-300" />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Email</label>
-                  <Input type="email" placeholder="your.email@example.com" />
+                <div className={`space-y-2 ${isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'}`}>
+                  <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Email</label>
+                  <Input type="email" placeholder="your.email@example.com" className="hover:border-primary/50 focus:scale-105 transition-all duration-300" />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Subject</label>
-                <Input placeholder="Project inquiry" />
+              <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-800' : 'opacity-0'}`}>
+                <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Subject</label>
+                <Input placeholder="Project inquiry" className="hover:border-primary/50 focus:scale-105 transition-all duration-300" />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Message</label>
-                <Textarea placeholder="Tell me about your project..." className="min-h-32 resize-none" />
+              <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-1000' : 'opacity-0'}`}>
+                <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Message</label>
+                <Textarea placeholder="Tell me about your project..." className="min-h-32 resize-none hover:border-primary/50 focus:scale-105 transition-all duration-300" />
               </div>
 
-              <Button className="w-full animate-glow">
-                <Send className="h-4 w-4 mr-2" />
+              <Button className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-scale-in-bounce animate-delay-1200' : 'opacity-0'}`}>
+                <Send className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Send Message
               </Button>
             </form>
