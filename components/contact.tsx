@@ -11,6 +11,8 @@ export function Contact() {
   const [isVisible, setIsVisible] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -45,6 +47,41 @@ export function Contact() {
 
     return () => observer.disconnect()
   }, [hasAnimated, isMounted])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      subject: formData.get('subject') as string,
+      message: formData.get('message') as string,
+    }
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        ;(e.target as HTMLFormElement).reset()
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <section id="contact" ref={ref} className="py-32 px-6 bg-card/30">
@@ -108,32 +145,70 @@ export function Contact() {
 
           {/* Contact Form */}
           <Card className={`p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group ${isVisible ? "opacity-100 animate-scale-in-bounce animate-delay-400" : "opacity-0"}`}>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className={`space-y-2 ${isVisible ? 'animate-slide-in-left animate-delay-600' : 'opacity-0'}`}>
                   <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Name</label>
-                  <Input placeholder="Your name" className="hover:border-primary/50 focus:scale-105 transition-all duration-300" />
+                  <Input 
+                    name="name" 
+                    placeholder="Your name" 
+                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300" 
+                    required 
+                  />
                 </div>
                 <div className={`space-y-2 ${isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'}`}>
                   <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Email</label>
-                  <Input type="email" placeholder="your.email@example.com" className="hover:border-primary/50 focus:scale-105 transition-all duration-300" />
+                  <Input 
+                    name="email" 
+                    type="email" 
+                    placeholder="your.email@example.com" 
+                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300" 
+                    required 
+                  />
                 </div>
               </div>
 
               <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-800' : 'opacity-0'}`}>
                 <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Subject</label>
-                <Input placeholder="Project inquiry" className="hover:border-primary/50 focus:scale-105 transition-all duration-300" />
+                <Input 
+                  name="subject" 
+                  placeholder="Project inquiry" 
+                  className="hover:border-primary/50 focus:scale-105 transition-all duration-300" 
+                  required 
+                />
               </div>
 
               <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-1000' : 'opacity-0'}`}>
                 <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Message</label>
-                <Textarea placeholder="Tell me about your project..." className="min-h-32 resize-none hover:border-primary/50 focus:scale-105 transition-all duration-300" />
+                <Textarea 
+                  name="message" 
+                  placeholder="Tell me about your project..." 
+                  className="min-h-32 resize-none hover:border-primary/50 focus:scale-105 transition-all duration-300" 
+                  required 
+                />
               </div>
 
-              <Button className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-scale-in-bounce animate-delay-1200' : 'opacity-0'}`}>
+              <Button 
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-scale-in-bounce animate-delay-1200' : 'opacity-0'}`}
+              >
                 <Send className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>
+
+              {/* Status Messages */}
+              {submitStatus === 'success' && (
+                <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg text-center">
+                  <p className="text-green-400 font-medium">✅ Message sent successfully!</p>
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="p-3 bg-red-600/20 border border-red-500/50 rounded-lg text-center">
+                  <p className="text-red-400 font-medium">❌ Failed to send message. Please try again.</p>
+                </div>
+              )}
             </form>
           </Card>
         </div>
