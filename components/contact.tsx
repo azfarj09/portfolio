@@ -83,14 +83,33 @@ export function Contact() {
         const errorData = await response.json()
         setSubmitStatus('rate-limited')
         setErrorMessage(`Too many requests. Please try again in ${Math.ceil(errorData.retryAfter / 60)} minutes.`)
+
+        // Auto-hide rate limit message after 5 seconds
+        setTimeout(() => {
+          setSubmitStatus('idle')
+          setErrorMessage('')
+        }, 5000)
       } else {
         const errorData = await response.json()
         setSubmitStatus('error')
         setErrorMessage(errorData.message || 'Failed to send message. Please try again.')
+
+        // Auto-hide error message after 3 seconds
+        setTimeout(() => {
+          setSubmitStatus('idle')
+          setErrorMessage('')
+        }, 3000)
       }
     } catch (error) {
       console.error('Contact form error:', error)
       setSubmitStatus('error')
+      setErrorMessage('Network error. Please check your connection and try again.')
+
+      // Auto-hide error message after 3 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle')
+        setErrorMessage('')
+      }, 3000)
     } finally {
       setIsSubmitting(false)
     }
