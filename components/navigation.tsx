@@ -64,20 +64,32 @@ export function Navigation() {
       
       <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out">
       <div 
-        className={`transition-all duration-500 ease-out ${
+        className={`transition-all duration-500 ease-out mx-auto ${
           isScrolled 
-            ? "max-w-4xl mx-auto mt-4 px-6 py-3 bg-background/90 backdrop-blur-md border border-border rounded-full shadow-lg" 
-            : "max-w-7xl mx-auto px-6 py-4 bg-transparent"
+            ? "max-w-sm md:max-w-4xl mt-4 mx-4 px-4 md:px-6 py-2 md:py-3 bg-background/90 backdrop-blur-md border border-border rounded-full shadow-lg" 
+            : "max-w-sm md:max-w-7xl mx-4 px-4 md:px-6 py-3 md:py-4 bg-transparent"
         }`}
       >
         <div className="flex items-center justify-between">
           <button
             onClick={scrollToTop}
-            className={`font-bold bg-gradient-to-r from-primary to-foreground bg-clip-text text-transparent transition-all duration-300 hover:scale-105 cursor-pointer ${
-              isScrolled ? "text-lg" : "text-xl"
-            }`}
+            className="transition-all duration-300 hover:scale-105 cursor-pointer"
           >
-            Azfar Jamil
+            {/* Desktop: Show text */}
+            <span className={`hidden md:block font-bold bg-gradient-to-r from-primary to-foreground bg-clip-text text-transparent ${
+              isScrolled ? "text-lg" : "text-xl"
+            }`}>
+              Azfar Jamil
+            </span>
+            
+            {/* Mobile: Show favicon */}
+            <img 
+              src="/favicon.svg" 
+              alt="Azfar Jamil" 
+              className={`md:hidden transition-all duration-300 ${
+                isScrolled ? "w-8 h-8" : "w-10 h-10"
+              }`}
+            />
           </button>
           <div className="flex items-center gap-4">
             <div className={`hidden md:flex items-center transition-all duration-300 ${
@@ -131,11 +143,7 @@ export function Navigation() {
             : isClosing 
             ? 'animate-slide-up-bounce' 
             : 'opacity-0 scale-95 -translate-y-4'
-        } ${
-          isScrolled 
-            ? "max-w-4xl mx-auto mt-2 px-6 py-6 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl" 
-            : "mx-6 mt-2 px-6 py-6 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl"
-        }`}>
+        } max-w-sm mx-auto mt-2 mx-6 px-6 py-6 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl`}>
           <div className="flex flex-col space-y-2">
             {navItems.map((item, index) => (
               <a
