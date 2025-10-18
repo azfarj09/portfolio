@@ -54,8 +54,10 @@ export function Hero() {
           </div>
 
           <div className="opacity-0 animate-scale-in-bounce animate-delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300">
-              View My Work
+            <Button size="lg" className="animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300" asChild>
+              <a href="#projects">
+                View My Work
+              </a>
             </Button>
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300" asChild>
