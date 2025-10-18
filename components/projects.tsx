@@ -5,12 +5,16 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, Github } from "lucide-react"
+import { TicTacToeDemo } from "./tic-tac-toe-demo"
+import { Notification } from "./notification"
 import projects from "./projects.json"
 
 export function Projects() {
   const [isVisible, setIsVisible] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [showTicTacToe, setShowTicTacToe] = useState(false)
+  const [showNotification, setShowNotification] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -106,16 +110,53 @@ export function Projects() {
                       Code
                     </a>
                   </Button>
-                  <Button variant="ghost" size="sm" className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300">
-                    <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
-                    Live Demo
-                  </Button>
+                  {project.title === "Tic Tac Toe Game" ? (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300"
+                      onClick={() => setShowTicTacToe(true)}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
+                      Live Demo
+                    </Button>
+                  ) : project.title === "Portfolio Website" ? (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300"
+                      onClick={() => setShowNotification(true)}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
+                      Live Demo
+                    </Button>
+                  ) : (
+                    <Button variant="ghost" size="sm" className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300" asChild>
+                      <a href={project.live} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
+                        Live Demo
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card>
           ))}
         </div>
       </div>
+
+      {/* Tic Tac Toe Demo Modal */}
+      <TicTacToeDemo 
+        isOpen={showTicTacToe} 
+        onClose={() => setShowTicTacToe(false)} 
+      />
+
+      {/* Portfolio Notification */}
+      <Notification
+        message="You are already on this website!"
+        isVisible={showNotification}
+        onHide={() => setShowNotification(false)}
+      />
     </section>
   )
 }
