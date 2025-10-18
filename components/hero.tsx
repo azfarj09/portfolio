@@ -65,11 +65,15 @@ export function Hero() {
                   <Github className="h-5 w-5" />
                 </a>
               </Button>
-              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:-rotate-12 active:scale-95 transition-all duration-300">
-                <Linkedin className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:-rotate-12 active:scale-95 transition-all duration-300" asChild>
+                <a href="https://www.linkedin.com/in/azfar-jamil-83b36a38b/" target="_blank" rel="noopener noreferrer">
+                  <Linkedin className="h-5 w-5" />
+                </a>
               </Button>
-              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300">
-                <Mail className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300" asChild>
+                <a href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,">
+                  <Mail className="h-5 w-5" />
+                </a>
               </Button>
             </div>
           </div>

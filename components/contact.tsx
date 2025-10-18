@@ -137,16 +137,19 @@ export function Contact() {
             </div>
 
             <div className="space-y-4">
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-200' : 'opacity-0'
-                }`}>
+              <a
+                href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,"
+                className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-200' : 'opacity-0'
+                  }`}
+              >
                 <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
                   <Mail className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
                 <div>
                   <div className="font-medium group-hover:text-primary transition-colors duration-300">Email</div>
-                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfar.jamil@email.com</div>
+                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfarj09@gmail.com</div>
                 </div>
-              </div>
+              </a>
 
               <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-400' : 'opacity-0'
                 }`}>
