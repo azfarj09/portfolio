@@ -72,11 +72,17 @@ export function Contact() {
 
       if (response.ok) {
         setSubmitStatus('success')
-        ;(e.target as HTMLFormElement).reset()
+          ; (e.target as HTMLFormElement).reset()
+
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => {
+          setSubmitStatus('idle')
+        }, 3000)
       } else {
         setSubmitStatus('error')
       }
     } catch (error) {
+      console.error('Contact form error:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -105,9 +111,8 @@ export function Contact() {
             </div>
 
             <div className="space-y-4">
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${
-                isVisible ? 'animate-slide-in-right animate-delay-200' : 'opacity-0'
-              }`}>
+              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-200' : 'opacity-0'
+                }`}>
                 <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
                   <Mail className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
@@ -117,9 +122,8 @@ export function Contact() {
                 </div>
               </div>
 
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${
-                isVisible ? 'animate-slide-in-right animate-delay-400' : 'opacity-0'
-              }`}>
+              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-400' : 'opacity-0'
+                }`}>
                 <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
                   <Phone className="h-5 w-5 text-primary group-hover:-rotate-12 transition-transform duration-300" />
                 </div>
@@ -129,9 +133,8 @@ export function Contact() {
                 </div>
               </div>
 
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${
-                isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'
-              }`}>
+              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'
+                }`}>
                 <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
                   <MapPin className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
@@ -149,46 +152,46 @@ export function Contact() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className={`space-y-2 ${isVisible ? 'animate-slide-in-left animate-delay-600' : 'opacity-0'}`}>
                   <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Name</label>
-                  <Input 
-                    name="name" 
-                    placeholder="Your name" 
-                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300" 
-                    required 
+                  <Input
+                    name="name"
+                    placeholder="Your name"
+                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300"
+                    required
                   />
                 </div>
                 <div className={`space-y-2 ${isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'}`}>
                   <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Email</label>
-                  <Input 
-                    name="email" 
-                    type="email" 
-                    placeholder="your.email@example.com" 
-                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300" 
-                    required 
+                  <Input
+                    name="email"
+                    type="email"
+                    placeholder="your.email@example.com"
+                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300"
+                    required
                   />
                 </div>
               </div>
 
               <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-800' : 'opacity-0'}`}>
                 <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Subject</label>
-                <Input 
-                  name="subject" 
-                  placeholder="Project inquiry" 
-                  className="hover:border-primary/50 focus:scale-105 transition-all duration-300" 
-                  required 
+                <Input
+                  name="subject"
+                  placeholder="Project inquiry"
+                  className="hover:border-primary/50 focus:scale-105 transition-all duration-300"
+                  required
                 />
               </div>
 
               <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-1000' : 'opacity-0'}`}>
                 <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Message</label>
-                <Textarea 
-                  name="message" 
-                  placeholder="Tell me about your project..." 
-                  className="min-h-32 resize-none hover:border-primary/50 focus:scale-105 transition-all duration-300" 
-                  required 
+                <Textarea
+                  name="message"
+                  placeholder="Tell me about your project..."
+                  className="min-h-32 resize-none hover:border-primary/50 focus:scale-105 transition-all duration-300"
+                  required
                 />
               </div>
 
-              <Button 
+              <Button
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-scale-in-bounce animate-delay-1200' : 'opacity-0'}`}
@@ -199,11 +202,11 @@ export function Contact() {
 
               {/* Status Messages */}
               {submitStatus === 'success' && (
-                <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg text-center">
+                <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg text-center animate-fade-in-up">
                   <p className="text-green-400 font-medium">✅ Message sent successfully!</p>
                 </div>
               )}
-              
+
               {submitStatus === 'error' && (
                 <div className="p-3 bg-red-600/20 border border-red-500/50 rounded-lg text-center">
                   <p className="text-red-400 font-medium">❌ Failed to send message. Please try again.</p>
