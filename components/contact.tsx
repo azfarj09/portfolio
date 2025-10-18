@@ -12,7 +12,8 @@ export function Contact() {
   const [hasAnimated, setHasAnimated] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'rate-limited'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -78,8 +79,14 @@ export function Contact() {
         setTimeout(() => {
           setSubmitStatus('idle')
         }, 3000)
+      } else if (response.status === 429) {
+        const errorData = await response.json()
+        setSubmitStatus('rate-limited')
+        setErrorMessage(`Too many requests. Please try again in ${Math.ceil(errorData.retryAfter / 60)} minutes.`)
       } else {
+        const errorData = await response.json()
         setSubmitStatus('error')
+        setErrorMessage(errorData.message || 'Failed to send message. Please try again.')
       }
     } catch (error) {
       console.error('Contact form error:', error)
@@ -209,7 +216,13 @@ export function Contact() {
 
               {submitStatus === 'error' && (
                 <div className="p-3 bg-red-600/20 border border-red-500/50 rounded-lg text-center">
-                  <p className="text-red-400 font-medium">❌ Failed to send message. Please try again.</p>
+                  <p className="text-red-400 font-medium">❌ {errorMessage || 'Failed to send message. Please try again.'}</p>
+                </div>
+              )}
+
+              {submitStatus === 'rate-limited' && (
+                <div className="p-3 bg-yellow-600/20 border border-yellow-500/50 rounded-lg text-center">
+                  <p className="text-yellow-400 font-medium">⏰ {errorMessage}</p>
                 </div>
               )}
             </form>

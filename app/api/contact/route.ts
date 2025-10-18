@@ -1,9 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as nodemailer from 'nodemailer'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    // Get client IP for rate limiting
+    const forwarded = request.headers.get('x-forwarded-for')
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown'
+    
+    // Apply rate limiting: 3 emails per 15 minutes per IP
+    const rateLimitResult = rateLimit(ip, 3, 15 * 60 * 1000)
+    
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          message: 'Too many requests. Please try again later.',
+          retryAfter: rateLimitResult.retryAfter 
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': rateLimitResult.retryAfter?.toString() || '900'
+          }
+        }
+      )
+    }
+
     const { name, email, subject, message } = await request.json()
+
+    // Validate required fields
+    if (!name || !email || !subject || !message) {
+      return NextResponse.json(
+        { message: 'All fields are required' },
+        { status: 400 }
+      )
+    }
 
     console.log('Environment variables:', {
       EMAIL_USER: process.env.EMAIL_USER,
@@ -68,7 +99,10 @@ export async function POST(request: NextRequest) {
     console.log('Email sent successfully:', result.messageId)
 
     return NextResponse.json(
-      { message: 'Email sent successfully!' },
+      { 
+        message: 'Email sent successfully!',
+        remaining: rateLimitResult.remaining 
+      },
       { status: 200 }
     )
   } catch (error) {
