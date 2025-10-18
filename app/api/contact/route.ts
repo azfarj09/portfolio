@@ -1,18 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import * as nodemailer from 'nodemailer'
 
 export async function POST(request: NextRequest) {
   try {
     const { name, email, subject, message } = await request.json()
 
-    // Create transporter (you'll need to configure this with your email service)
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail', // or 'outlook', 'yahoo', etc.
-      auth: {
-        user: process.env.EMAIL_USER, // Your email
-        pass: process.env.EMAIL_PASS, // Your app password
-      },
+    console.log('Environment variables:', {
+      EMAIL_USER: process.env.EMAIL_USER,
+      EMAIL_PASS: process.env.EMAIL_PASS ? 'Set' : 'Not set'
     })
+
+    // Validate environment variables
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error('Email credentials not configured')
+    }
+
+    // Create transporter with Gmail
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    })
+
+    // Test the connection
+    await transporter.verify()
+    console.log('SMTP connection verified')
 
     // Email options
     const mailOptions = {
@@ -47,16 +64,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email
-    await transporter.sendMail(mailOptions)
+    const result = await transporter.sendMail(mailOptions)
+    console.log('Email sent successfully:', result.messageId)
 
     return NextResponse.json(
       { message: 'Email sent successfully!' },
       { status: 200 }
     )
   } catch (error) {
-    console.error('Error sending email:', error)
+    console.error('Detailed error:', error)
+    
+    // Return more specific error message
+    let errorMessage = 'Failed to send email'
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    
     return NextResponse.json(
-      { message: 'Failed to send email' },
+      { 
+        message: 'Failed to send email',
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error : undefined
+      },
       { status: 500 }
     )
   }
