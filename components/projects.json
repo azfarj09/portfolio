@@ -13,5 +13,17 @@
         ],
         "github": "https://github.com/azfarj09/portfolio",
         "live": "#"
+    },
+    {
+        "title": "Tic Tac Toe Game",
+        "description": "A simple Tic Tac Toe game I built while learning HTML CSS and JavaScript.",
+        "image": "/tictactoe.png",
+        "technologies": [
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ],
+        "github": "https://github.com/azfarj09/Tic-tac-toe",
+        "live": "#"
     }
 ]
