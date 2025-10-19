@@ -21,5 +21,29 @@
     ],
     "image": "/blog1.png",
     "featured": true
+  },
+  {
+    "id": 2,
+    "title": "Why I Built This Portfolio",
+    "excerpt": "The story behind creating my personal portfolio website and what I learned in the process.",
+    "content": [
+      "Building this portfolio wasn't just about showcasing my projects - it was about proving to myself that I could create something professional and polished from scratch.",
+      "As a 12-year-old developer, I often felt like I needed to prove that my age doesn't define my capabilities. This portfolio became my way of demonstrating that young developers can create high-quality, professional work that stands on its own merit.",
+      "I wanted to create more than just a simple website. I envisioned a platform that would tell my story, showcase my technical skills, and connect with other developers and potential collaborators. Every animation, every interaction, and every design choice was intentional.",
+      "The technical challenges were exciting. I used Next.js for the framework, TypeScript for type safety, and Tailwind CSS for styling. Implementing features like the contact form with Nodemailer, rate limiting, and responsive design taught me so much about full-stack development.",
+      "One of my favorite features is the interactive tic-tac-toe game that opens right in the portfolio. It shows visitors that I can build engaging, functional applications while keeping them entertained. It's a perfect blend of showcasing technical skills and creating a memorable user experience.",
+      "The blog section you're reading right now was another important addition. I wanted a space to share my thoughts, document my learning journey, and connect with the developer community. Writing about my experiences helps me reflect on how far I've come.",
+      "This portfolio represents more than just code - it's a statement that passion and dedication matter more than age. It's my digital handshake with the world, showing that young developers can contribute meaningfully to the tech community.",
+      "Building this portfolio taught me that creating something you're proud of takes time, patience, and attention to detail. But the satisfaction of seeing your vision come to life makes every challenge worth it."
+    ],
+    "date": "2025-10-19",
+    "readTime": "4 min read",
+    "tags": [
+      "Portfolio",
+      "Personal Project",
+      "Reflection"
+    ],
+    "image": "/blog2.png",
+    "featured": false
   }
 ]
