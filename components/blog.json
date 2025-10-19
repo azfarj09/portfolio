@@ -1,0 +1,25 @@
+[
+  {
+    "id": 1,
+    "title": "My Journey into Web Development",
+    "excerpt": "How I went from watching YouTube tutorials to building real projects as a 12-year-old developer.",
+    "content": [
+      "Starting my coding journey at a young age has been an incredible adventure. It all began with simple curiosity and YouTube tutorials that opened up a whole new world of possibilities.",
+      "My journey began when I stumbled upon programming tutorials on YouTube. What started as simple curiosity quickly turned into hours of learning and experimenting. The first 'Hello World' program I wrote felt like magic - I was actually talking to the computer!",
+      "From there, I dove deeper into web technologies. HTML and CSS came first, allowing me to create my first web pages. Then JavaScript opened up a whole new world of interactivity. Each new concept I learned felt like unlocking a new superpower.",
+      "The most challenging part wasn't learning the syntax or understanding the concepts - it was building the confidence to create real projects. But with each small project, from simple calculators to interactive games, I grew more confident in my abilities.",
+      "Learning from amazing YouTubers like Bro Code and Dave Gray made complex concepts feel achievable. Their clear explanations and hands-on approach helped me understand not just the 'how' but also the 'why' behind programming concepts.",
+      "Today, I'm working with modern frameworks like React and Next.js, building full-stack applications, and constantly learning new technologies. The journey from watching tutorials to building real projects has taught me that age is just a number when it comes to coding - passion and persistence are what truly matter.",
+      "My advice to other young developers: start small, be consistent, and don't be afraid to make mistakes. Every error is a learning opportunity, and every project, no matter how simple, is a step forward in your coding journey."
+    ],
+    "date": "2025-10-19",
+    "readTime": "5 min read",
+    "tags": [
+      "Web Development",
+      "Learning",
+      "Journey"
+    ],
+    "image": "/blog1.png",
+    "featured": true
+  }
+]
