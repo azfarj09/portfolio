@@ -1,6 +1,18 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { 
+  Code2, 
+  Database, 
+  Server, 
+  Cloud, 
+  Container, 
+  Zap, 
+  Palette,
+  Globe,
+  FileCode,
+  Layers
+} from "lucide-react"
 
 export function About() {
   const [isVisible, setIsVisible] = useState(false)
@@ -71,31 +83,35 @@ export function About() {
               <div className="bg-card border border-border rounded-lg p-8 space-y-6 hover:shadow-2xl hover:border-primary/50 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1">
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold group-hover:text-primary transition-colors duration-300">Technologies I work with</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     {[
-                      "JavaScript",
-                      "TypeScript",
-                      "React",
-                      "Next.js",
-                      "Node.js",
-                      "Python",
-                      "PostgreSQL",
-                      "MongoDB",
-                      "AWS",
-                      "Docker",
-                      "GraphQL",
-                      "Tailwind CSS",
-                    ].map((tech, index) => (
-                      <div
-                        key={tech}
-                        className={`text-sm text-muted-foreground hover:text-primary hover:scale-110 hover:translate-x-2 transition-all duration-300 cursor-default p-2 rounded hover:bg-primary/10 ${
-                          isVisible ? 'animate-slide-in-right' : 'opacity-0'
-                        }`}
-                        style={{ animationDelay: `${(index * 0.1) + 0.6}s` }}
-                      >
-                        {tech}
-                      </div>
-                    ))}
+                      { name: "JavaScript", icon: Code2, color: "text-yellow-400" },
+                      { name: "TypeScript", icon: FileCode, color: "text-blue-400" },
+                      { name: "React", icon: Zap, color: "text-cyan-400" },
+                      { name: "Next.js", icon: Globe, color: "text-white" },
+                      { name: "Node.js", icon: Server, color: "text-green-400" },
+                      { name: "Python", icon: Code2, color: "text-blue-300" },
+                      { name: "PostgreSQL", icon: Database, color: "text-blue-500" },
+                      { name: "MongoDB", icon: Database, color: "text-green-500" },
+                      { name: "AWS", icon: Cloud, color: "text-orange-400" },
+                      { name: "Docker", icon: Container, color: "text-blue-400" },
+                      { name: "GraphQL", icon: Layers, color: "text-pink-400" },
+                      { name: "Tailwind CSS", icon: Palette, color: "text-teal-400" },
+                    ].map((tech, index) => {
+                      const IconComponent = tech.icon
+                      return (
+                        <div
+                          key={tech.name}
+                          className={`flex items-center gap-3 text-sm text-muted-foreground hover:text-primary hover:scale-110 hover:translate-x-2 transition-all duration-300 cursor-default p-3 rounded-lg hover:bg-primary/10 group/tech ${
+                            isVisible ? 'animate-slide-in-right' : 'opacity-0'
+                          }`}
+                          style={{ animationDelay: `${(index * 0.1) + 0.6}s` }}
+                        >
+                          <IconComponent className={`h-4 w-4 ${tech.color} group-hover/tech:scale-125 transition-all duration-300`} />
+                          <span className="font-medium">{tech.name}</span>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
