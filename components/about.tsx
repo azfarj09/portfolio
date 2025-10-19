@@ -18,6 +18,7 @@ export function About() {
   const [isVisible, setIsVisible] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -27,6 +28,28 @@ export function About() {
     }, 50)
 
     return () => clearTimeout(mountTimer)
+  }, [])
+
+  useEffect(() => {
+    // Check for screens smaller than iPhone SE
+    const checkScreenSize = () => {
+      const width = window.innerWidth
+      const shouldHideIcons = width < 375 // Hide icons for screens smaller than 375px
+      console.log(`DEBUG: Screen width: ${width}px, Should hide icons: ${shouldHideIcons}, Current isSmallScreen: ${isSmallScreen}`)
+      setIsSmallScreen(shouldHideIcons)
+    }
+
+    // Initial check
+    checkScreenSize()
+    
+    // Listen for resize events
+    window.addEventListener('resize', checkScreenSize)
+    window.addEventListener('orientationchange', checkScreenSize)
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize)
+      window.removeEventListener('orientationchange', checkScreenSize)
+    }
   }, [])
 
   useEffect(() => {
@@ -107,7 +130,9 @@ export function About() {
                           }`}
                           style={{ animationDelay: `${(index * 0.1) + 0.6}s` }}
                         >
-                          <IconComponent className={`h-4 w-4 ${tech.color} group-hover/tech:scale-125 transition-all duration-300`} />
+                          {(typeof window === 'undefined' || window.innerWidth >= 375) && (
+                            <IconComponent className={`h-4 w-4 ${tech.color} group-hover/tech:scale-125 transition-all duration-300`} />
+                          )}
                           <span className="font-medium">{tech.name}</span>
                         </div>
                       )
