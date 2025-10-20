@@ -8,8 +8,8 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: {
-    default: "Azfar Jamil - Full Stack Developer",
-    template: "%s | Azfar Jamil"
+    default: "azfarj09 - Azfar Jamil",
+    template: "%s | azfarj09 - Azfar Jamil"
   },
   description: "12-year-old Full Stack Developer passionate about modern web technologies. Specializing in React, Next.js, TypeScript, and Node.js. Building the future, one line of code at a time.",
   keywords: [
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://azfarj.vercel.app',
     siteName: 'Azfar Jamil Portfolio',
-    title: 'Azfar Jamil - Full Stack Developer',
+    title: 'azfarj09 - Azfar Jamil',
     description: '12-year-old Full Stack Developer passionate about modern web technologies. Building amazing web applications with React, Next.js, and TypeScript.',
     images: [
       {
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Azfar Jamil - Full Stack Developer',
+    title: 'azfarj09 - Azfar Jamil',
     description: '12-year-old Full Stack Developer building amazing web applications. Check out my projects and coding journey!',
     images: ['/og-image.png'],
     creator: '@azfarj09',

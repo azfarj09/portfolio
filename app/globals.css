@@ -34,11 +34,17 @@
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+
+  html {
+    overflow-x: hidden;
   }
 
   /* Added smooth scrolling and custom animations */
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   @keyframes fadeInUp {
