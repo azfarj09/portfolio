@@ -1,0 +1,22 @@
+{
+  "name": "Azfar Jamil - Full Stack Developer Portfolio",
+  "short_name": "Azfar Jamil",
+  "description": "12-year-old Full Stack Developer passionate about modern web technologies",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#65a3ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "developer", "technology"],
+  "lang": "en",
+  "scope": "/",
+  "id": "azfar-jamil-portfolio"
+}
