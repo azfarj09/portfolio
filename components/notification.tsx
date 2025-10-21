@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 interface NotificationProps {
   message: string
@@ -22,7 +22,7 @@ export function Notification({ message, isVisible, onHide }: NotificationProps) 
   if (!isVisible) return null
 
   return (
-    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down-bounce">
+    <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-[60] animate-slide-down-bounce">
       <div className="bg-primary/90 backdrop-blur-md text-primary-foreground px-6 py-3 rounded-lg shadow-lg border border-primary/20">
         <p className="text-sm font-medium">{message}</p>
       </div>
