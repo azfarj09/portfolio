@@ -126,20 +126,20 @@ export function Navigation() {
         </div>
 
         {/* Mobile menu */}
-        <div className={`md:hidden overflow-hidden ${isMobileMenuOpen && !isClosing ? 'max-h-96' : 'max-h-0'
+        <div className={`md:hidden ${isMobileMenuOpen && !isClosing ? 'max-h-screen overflow-visible' : 'max-h-0 overflow-hidden'
           } transition-all duration-500 ease-out`}>
           <div className={`transform transition-all duration-400 ${isMobileMenuOpen && !isClosing
               ? 'animate-slide-down-bounce'
               : isClosing
                 ? 'animate-slide-up-bounce'
                 : 'opacity-0 scale-95 -translate-y-4'
-            } max-w-[calc(100%-2rem)] mx-auto mt-2 mx-4 px-6 py-6 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl`}>
-            <div className="flex flex-col space-y-2">
+            } max-w-[calc(100%-2rem)] mx-auto mt-2 mx-4 px-6 py-6 [@media(max-height:310px)]:py-4 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl`}>
+            <div className="flex flex-col space-y-2 [@media(max-height:310px)]:space-y-1">
               {navItems.map((item, index) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className={`text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:shadow-md transition-all duration-300 py-3 px-4 rounded-xl font-medium transform hover:translate-x-2 hover:scale-105 active:scale-95 ${isMobileMenuOpen && !isClosing
+                  className={`text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:shadow-md transition-all duration-300 py-3 [@media(max-height:310px)]:py-2 px-4 rounded-xl font-medium transform hover:translate-x-2 hover:scale-105 active:scale-95 ${isMobileMenuOpen && !isClosing
                       ? 'animate-menu-item-slide opacity-100'
                       : isClosing
                         ? 'animate-menu-item-slide-out'
