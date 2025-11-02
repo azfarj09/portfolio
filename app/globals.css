@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@import "tailwindcss";
 
 @theme {
   --color-background: oklch(0.08 0.02 240);

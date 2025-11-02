@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "motion/react"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, User, Briefcase, FileText, Mail } from "lucide-react"
 
 const navItems = [
   { name: "About", href: "#about" },
@@ -15,6 +16,7 @@ export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [keepSquareCorners, setKeepSquareCorners] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,41 +37,62 @@ export function Navigation() {
     if (isMobileMenuOpen) {
       setIsClosing(true)
       setTimeout(() => {
+        setKeepSquareCorners(false)
+      }, 290) // Round corners 10ms before dropdown animation ends
+      setTimeout(() => {
         setIsMobileMenuOpen(false)
         setIsClosing(false)
       }, 300)
     } else {
       setIsMobileMenuOpen(true)
+      setKeepSquareCorners(true)
     }
   }
 
-  const handleMenuItemClick = () => {
+  const handleMenuItemClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    const href = e.currentTarget.getAttribute('href')
+
+    // Close menu first
     setIsClosing(true)
+    setTimeout(() => {
+      setKeepSquareCorners(false)
+    }, 290)
     setTimeout(() => {
       setIsMobileMenuOpen(false)
       setIsClosing(false)
-    }, 200)
+    }, 300)
+
+    // Scroll to section after menu starts closing
+    setTimeout(() => {
+      if (href) {
+        const element = document.querySelector(href)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }
+    }, 350)
   }
 
   return (
     <>
-      {/* Mobile menu overlay */}
       {isMobileMenuOpen && (
         <div
-          className={`fixed inset-0 bg-background/20 backdrop-blur-sm z-40 md:hidden ${isClosing ? 'animate-overlay-fade-out' : 'animate-overlay-fade-in'
-            }`}
+          className={`fixed inset-0 bg-background/20 backdrop-blur-sm z-40 md:hidden ${isClosing ? 'animate-overlay-fade-out' : 'animate-overlay-fade-in'}`}
           onClick={handleMenuToggle}
         />
       )}
 
-      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out">
-        <div
-          className={`transition-all duration-500 ease-out mx-auto max-w-[calc(100%-2rem)] md:max-w-7xl mx-4 px-6 md:px-6 py-3 md:py-4 ${isScrolled
-              ? "md:!max-w-4xl !mt-4 !py-2 md:!py-3 bg-background/90 backdrop-blur-md border border-border rounded-full shadow-lg"
-              : "bg-transparent"
+      <div className={`fixed top-0 left-0 right-0 z-50 flex justify-center w-full px-4 transition-all duration-500 ease-out ${isScrolled ? 'pt-4' : 'pt-2 md:pt-2'}`}>
+        <nav
+          className={`w-full max-w-[calc(100%-2rem)] md:max-w-7xl rounded-[2rem] ${isScrolled
+            ? "md:!max-w-4xl md:rounded-full bg-background/90 backdrop-blur-md border border-border/50 shadow-lg transition-all duration-500 ease-out"
+            : isMobileMenuOpen
+              ? "bg-background/60 backdrop-blur-md border border-border/50 transition-[background-color,border] duration-200"
+              : "bg-transparent transition-all duration-500 ease-out"
             }`}
         >
-          <div className="flex items-center justify-between">
+          <div className={`flex items-center justify-between px-6 mx-auto transition-all duration-500 ease-out ${isScrolled ? "py-3" : "py-4"}`}>
             <button
               onClick={scrollToTop}
               className="transition-all duration-300 hover:scale-105 cursor-pointer"
@@ -95,7 +118,7 @@ export function Navigation() {
                   <a
                     key={item.name}
                     href={item.href}
-                    className={`relative text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-105 active:scale-95 group ${isScrolled ? "text-sm" : "text-base"
+                    className={`relative text-muted-foreground hover:text-foreground transition-all md:duration-1000 ease-out hover:scale-105 active:scale-95 group ${isScrolled ? "text-sm" : "text-base"
                       }`}
                   >
                     <span className="relative">
@@ -123,43 +146,67 @@ export function Navigation() {
               </Button>
             </div>
           </div>
-        </div>
 
-        {/* Mobile menu */}
-        <div className={`md:hidden ${isMobileMenuOpen && !isClosing ? 'max-h-screen overflow-visible' : 'max-h-0 overflow-hidden'
-          } transition-all duration-500 ease-out`}>
-          <div className={`transform transition-all duration-400 ${isMobileMenuOpen && !isClosing
-              ? 'animate-slide-down-bounce'
-              : isClosing
-                ? 'animate-slide-up-bounce'
-                : 'opacity-0 scale-95 -translate-y-4'
-            } max-w-[calc(100%-2rem)] mx-auto mt-2 mx-4 px-6 py-6 [@media(max-height:310px)]:py-4 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl`}>
-            <div className="flex flex-col space-y-2 [@media(max-height:310px)]:space-y-1">
-              {navItems.map((item, index) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={`text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:shadow-md transition-all duration-300 py-3 [@media(max-height:310px)]:py-2 px-4 rounded-xl font-medium transform hover:translate-x-2 hover:scale-105 active:scale-95 ${isMobileMenuOpen && !isClosing
-                      ? 'animate-menu-item-slide opacity-100'
-                      : isClosing
-                        ? 'animate-menu-item-slide-out'
-                        : 'opacity-0 translate-x-[-30px]'
-                    }`}
-                  style={{
-                    animationDelay: isMobileMenuOpen && !isClosing ? `${index * 80 + 100}ms` : `${(navItems.length - index - 1) * 50}ms`
-                  }}
-                  onClick={handleMenuItemClick}
-                >
-                  <span className="relative">
-                    {item.name}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </nav>
+          {/* Mobile dropdown */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="md:hidden border-t border-border/50 overflow-hidden"
+              >
+                <div className="px-4 py-3 space-y-1">
+                  {navItems.map((item, index) => {
+                    const icons: Record<string, typeof User> = {
+                      About: User,
+                      Projects: Briefcase,
+                      Blog: FileText,
+                      Contact: Mail
+                    }
+                    const IconComponent = icons[item.name]
+
+                    if (!IconComponent) return null
+
+                    return (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 * (index + 1) }}
+                        className="relative"
+                      >
+                        <a
+                          href={item.href}
+                          className="flex items-center px-3 py-2 text-sm font-medium rounded-[0.5rem] text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors relative z-10"
+                          onClick={handleMenuItemClick}
+                        >
+                          <IconComponent className="w-4 h-4 mr-2" />
+                          {item.name}
+                        </a>
+                      </motion.div>
+                    )
+                  })}
+                  <a href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,">
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="pt-2 pb-2 cursor-pointer"
+                    >
+                      <div className="flex items-center justify-center gap-3 w-full bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-6 rounded-[0.5rem] font-semibold transition-colors">
+                        <Mail className="w-4 h-4" />
+                        Get In Touch
+                      </div>
+                    </motion.div>
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
+      </div>
     </>
   )
 }
