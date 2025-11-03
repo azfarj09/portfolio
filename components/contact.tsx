@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Send } from "lucide-react"
+import { Mail, MapPin, Send, Github, Linkedin } from "lucide-react"
 
 // Custom Discord Icon Component
 const DiscordIcon = ({ className }: { className?: string }) => (
@@ -262,9 +262,55 @@ export function Contact() {
 
         {/* Footer */}
         <div
-          className={`text-center mt-16 pt-8 border-t border-border ${isVisible ? "opacity-100 animate-fade-in-up animate-delay-800" : "opacity-0"}`}
+          className={`mt-16 pt-8 border-t border-border ${isVisible ? "opacity-100 animate-fade-in-up animate-delay-800" : "opacity-0"}`}
         >
-          <p className="text-muted-foreground">© 2025 Azfar Jamil. Built with Next.js and Tailwind CSS.</p>
+          <div className="flex flex-col md:flex-row items-start gap-8 mb-8">
+            {/* Left Side - Brand & Social */}
+            <div className="space-y-4 md:flex-[2]">
+              <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-foreground bg-clip-text text-transparent">
+                Azfar Jamil
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-xs">
+                Building digital experiences with passion and precision. Let's create something amazing together.
+              </p>
+              <div className="flex gap-4">
+                <a href="https://github.com/azfarj09" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all" aria-label="GitHub">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href="https://www.linkedin.com/in/azfar-jamil-83b36a38b/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all" aria-label="LinkedIn">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="mailto:azfarj09@gmail.com" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all" aria-label="Email">
+                  <Mail className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Center - Contact */}
+            <div className="md:flex-1">
+              <h4 className="text-sm font-semibold mb-4">Contact</h4>
+              <div className="flex flex-col gap-2">
+                <a href="mailto:azfarj09@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">azfarj09@gmail.com</a>
+                <p className="text-sm text-muted-foreground">Toronto, Ontario</p>
+                <p className="text-sm text-muted-foreground">Discord: azfar222</p>
+              </div>
+            </div>
+
+            {/* Right Side - Quick Links */}
+            <div className="md:flex-1">
+              <h4 className="text-sm font-semibold mb-4">Quick Links</h4>
+              <div className="flex flex-col gap-2">
+                <a href="#about" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">About</a>
+                <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">Projects</a>
+                <a href="#blog" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">Blog</a>
+                <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">Contact</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center pt-6 border-t border-border">
+            <p className="text-muted-foreground text-sm">© 2025 Azfar Jamil. Built with Next.js and Tailwind CSS.</p>
+          </div>
         </div>
       </div>
     </section>

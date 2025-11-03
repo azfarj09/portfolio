@@ -188,14 +188,19 @@ export function Navigation() {
                       </motion.div>
                     )
                   })}
-                  <a href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,">
+                  <a
+                    href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,"
+                    style={{
+                      display: typeof window !== 'undefined' && window.innerHeight <= 296 ? 'none' : 'block'
+                    }}
+                  >
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                       className="pt-2 pb-2 cursor-pointer"
                     >
-                      <div className="flex items-center justify-center gap-3 w-full bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-6 rounded-[0.5rem] font-semibold transition-colors">
+                      <div className="flex items-center justify-center gap-3 w-full bg-primary text-primary-foreground hover:bg-primary/90 py-1.75 px-6 rounded-[0.5rem] font-semibold transition-colors">
                         <Mail className="w-4 h-4" />
                         Get In Touch
                       </div>
