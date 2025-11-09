@@ -27,15 +27,17 @@
         "live": "#"
     },
     {
-        "title": "AI PDF Summarizer",
-         "description": "A simple AI PDF summarizer that uses Gemini 2 Flash to extract and summarize content from PDF documents.",
+        "title": "AI PDF Tools",
+         "description": "AI PDF summarizer, flashcard generator, and PDF chat webapp",
         "image": "/AI-pdf.png",
         "technologies": [
             "Next.js",
             "React",
-            "TypeScript"
+            "TypeScript",
+            "Gemini API"
+
         ],
         "github": "https://github.com/azfarj09/ai-pdf-summarizer",
-        "live": "https://github.com/azfarj09/ai-pdf-summarizer"
+        "live": "ai-pdf-tools.vercel.app"
     }
 ]
