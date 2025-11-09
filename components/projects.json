@@ -25,5 +25,17 @@
         ],
         "github": "https://github.com/azfarj09/Tic-tac-toe",
         "live": "#"
+    },
+    {
+        "title": "AI PDF Summarizer",
+         "description": "A simple AI PDF summarizer that uses Gemini 2 Flash to extract and summarize content from PDF documents.",
+        "image": "/AI-pdf.png",
+        "technologies": [
+            "Next.js",
+            "React",
+            "TypeScript"
+        ],
+        "github": "https://github.com/azfarj09/ai-pdf-summarizer",
+        "live": "https://github.com/azfarj09/ai-pdf-summarizer"
     }
 ]
