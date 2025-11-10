@@ -28,14 +28,13 @@
     },
     {
         "title": "AI PDF Tools",
-         "description": "AI PDF summarizer, flashcard generator, and PDF chat webapp",
+         "description": "AI-powered PDF toolkit featuring intelligent summarization, automated flashcard generation, and interactive chat capabilities for enhanced document analysis.",
         "image": "/AI-pdf.png",
         "technologies": [
             "Next.js",
             "React",
             "TypeScript",
             "Gemini API"
-
         ],
         "github": "https://github.com/azfarj09/ai-pdf-summarizer",
         "live": "ai-pdf-tools.vercel.app"
