@@ -37,6 +37,6 @@
             "Gemini API"
         ],
         "github": "https://github.com/azfarj09/ai-pdf-summarizer",
-        "live": "ai-pdf-tools.vercel.app"
+        "live": "https://ai-pdf-tools.vercel.app"
     }
 ]
