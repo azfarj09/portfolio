@@ -167,7 +167,7 @@ export function Contact() {
                 </div>
                 <div>
                   <div className="font-medium group-hover:text-primary transition-colors duration-300">Discord</div>
-                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfar222</div>
+                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfar0913</div>
                 </div>
               </div>
 
@@ -292,7 +292,7 @@ export function Contact() {
               <div className="flex flex-col gap-2">
                 <a href="mailto:azfarj09@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">azfarj09@gmail.com</a>
                 <p className="text-sm text-muted-foreground">Toronto, Ontario</p>
-                <p className="text-sm text-muted-foreground">Discord: azfar222</p>
+                <p className="text-sm text-muted-foreground">Discord: azfar0913</p>
               </div>
             </div>
 
