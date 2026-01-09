@@ -4,9 +4,11 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, ArrowDown } from "lucide-react"
 import { useTypingEffect } from "@/hooks/use-typing-effect"
+import { calculateAge } from "@/lib/utils"
 
 export function Hero() {
   const [mounted, setMounted] = useState(false)
+  const age = calculateAge()
   const { displayedText: typedName, isComplete } = useTypingEffect({
     text: "Azfar Jamil",
     speed: 150,
@@ -43,7 +45,7 @@ export function Hero() {
 
           <div className="opacity-0 animate-slide-in-left animate-delay-200">
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance hover:text-foreground transition-colors duration-300">
-              Hey! I'm a 12-year-old who fell in love with coding by watching YouTube tutorials. What started as curiosity turned into building real projects!
+              Hey! I'm a {age}-year-old who fell in love with coding by watching YouTube tutorials. What started as curiosity turned into building real projects!
             </p>
           </div>
 

@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, ArrowRight, X } from "lucide-react"
-import blogPosts from "./blog.json"
+import { replaceAgeInText } from "@/lib/utils"
+import rawBlogPosts from "./blog.json"
 
 export function Blog() {
     const [isVisible, setIsVisible] = useState(false)
@@ -14,6 +15,13 @@ export function Blog() {
     const [selectedPost, setSelectedPost] = useState<typeof blogPosts[0] | null>(null)
     const [showAllPosts, setShowAllPosts] = useState(false)
     const ref = useRef<HTMLElement>(null)
+
+    // Process blog posts to replace age dynamically
+    const blogPosts = useMemo(() => rawBlogPosts.map(post => ({
+        ...post,
+        excerpt: replaceAgeInText(post.excerpt),
+        content: post.content.map(paragraph => replaceAgeInText(paragraph))
+    })), [])
 
     useEffect(() => {
         // Small delay to ensure proper mounting

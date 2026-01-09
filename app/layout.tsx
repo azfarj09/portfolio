@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     default: "azfarj09 - Azfar Jamil",
     template: "%s | azfarj09 - Azfar Jamil"
   },
-  description: "12-year-old Full Stack Developer passionate about modern web technologies. Specializing in React, Next.js, TypeScript, and Node.js. Building the future, one line of code at a time.",
+  description: "13-year-old Full Stack Developer passionate about modern web technologies. Specializing in React, Next.js, TypeScript, and Node.js. Building the future, one line of code at a time.",
   keywords: [
     "Azfar Jamil",
     "Full Stack Developer",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     url: 'https://azfarj.vercel.app',
     siteName: 'Azfar Jamil Portfolio',
     title: 'azfarj09 - Azfar Jamil',
-    description: '12-year-old Full Stack Developer passionate about modern web technologies. Building amazing web applications with React, Next.js, and TypeScript.',
+    description: '13-year-old Full Stack Developer passionate about modern web technologies. Building amazing web applications with React, Next.js, and TypeScript.',
     images: [
       {
         url: '/og-image.png',
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'azfarj09 - Azfar Jamil',
-    description: '12-year-old Full Stack Developer building amazing web applications. Check out my projects and coding journey!',
+    description: '13-year-old Full Stack Developer building amazing web applications. Check out my projects and coding journey!',
     images: ['/og-image.png'],
     creator: '@azfarj09',
   },
@@ -88,7 +88,7 @@ export default function RootLayout({
     "@type": "Person",
     "name": "Azfar Jamil",
     "jobTitle": "Full Stack Developer",
-    "description": "12-year-old Full Stack Developer passionate about modern web technologies",
+    "description": "13-year-old Full Stack Developer passionate about modern web technologies",
     "url": "https://azfarj.vercel.app",
     "sameAs": [
       "https://github.com/azfarj09",
