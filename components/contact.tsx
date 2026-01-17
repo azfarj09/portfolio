@@ -21,12 +21,12 @@ const DiscordIcon = ({ className }: { className?: string }) => (
 
 export function Contact() {
   const [isVisible, setIsVisible] = useState(false)
-  const [hasAnimated, setHasAnimated] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'rate-limited'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const ref = useRef<HTMLElement>(null)
+  const hasAnimatedRef = useRef(false)
 
   useEffect(() => {
     // Small delay to ensure proper mounting
@@ -42,11 +42,11 @@ export function Contact() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
+        if (entry.isIntersecting && !hasAnimatedRef.current) {
+          hasAnimatedRef.current = true
           // Add a small delay to ensure smooth animation start
           setTimeout(() => {
             setIsVisible(true)
-            setHasAnimated(true)
           }, 50)
           observer.disconnect() // Stop observing once animated
         }
@@ -59,7 +59,7 @@ export function Contact() {
     }
 
     return () => observer.disconnect()
-  }, [hasAnimated, isMounted])
+  }, [isMounted])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -185,7 +185,7 @@ export function Contact() {
           </div>
 
           {/* Contact Form */}
-          <Card className={`p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group ${isVisible ? "opacity-100 animate-scale-in-bounce animate-delay-400" : "opacity-0"}`}>
+          <Card className={`p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group ${isVisible ? "animate-bounce-only animate-delay-400" : "opacity-0"}`}>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className={`space-y-2 ${isVisible ? 'animate-slide-in-left animate-delay-600' : 'opacity-0'}`}>
@@ -232,7 +232,7 @@ export function Contact() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-scale-in-bounce animate-delay-1200' : 'opacity-0'}`}
+                className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-bounce-only animate-delay-1200' : 'opacity-0'}`}
               >
                 <Send className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 {isSubmitting ? 'Sending...' : 'Send Message'}
@@ -240,7 +240,7 @@ export function Contact() {
 
               {/* Status Messages */}
               {submitStatus === 'success' && (
-                <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg text-center animate-fade-in-up">
+                <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg text-center">
                   <p className="text-green-400 font-medium">✅ Message sent successfully!</p>
                 </div>
               )}
