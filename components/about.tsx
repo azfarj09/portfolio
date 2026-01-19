@@ -118,7 +118,7 @@ export function About() {
                       { name: "JavaScript", icon: Code2, color: "text-yellow-400" },
                       { name: "TypeScript", icon: FileCode, color: "text-blue-400" },
                       { name: "React", icon: Zap, color: "text-cyan-400" },
-                      { name: "Next.js", icon: Globe, color: "text-white" },
+                      { name: "Next.js", icon: Globe, color: "text-foreground" },
                       { name: "Node.js", icon: Server, color: "text-green-400" },
                       { name: "Python", icon: Code2, color: "text-blue-300" },
                       { name: "PostgreSQL", icon: Database, color: "text-blue-500" },

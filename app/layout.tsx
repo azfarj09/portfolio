@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -356,7 +357,7 @@ export default function RootLayout({
   ]
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect hints for performance optimization */}
         <link rel="preconnect" href="https://github.com" />
@@ -366,7 +367,7 @@ export default function RootLayout({
 
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#65a3ff" media="(prefers-color-scheme: dark)" />
-        <meta name="theme-color" content="#65a3ff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: light)" />
 
         {/* Additional SEO meta tags */}
         <meta name="format-detection" content="telephone=no" />
@@ -382,7 +383,14 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
-        <Suspense fallback={null}>{children}</Suspense>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange={false}
+        >
+          <Suspense fallback={null}>{children}</Suspense>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

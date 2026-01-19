@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X, User, Briefcase, FileText, Mail } from "lucide-react"
 
 const navItems = [
@@ -131,23 +132,29 @@ export function Navigation() {
                     </span>
                   </a>
                 ))}
+
+                {/* Theme Toggle - Desktop */}
+                <ThemeToggle />
               </div>
 
               {/* Mobile menu button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`md:hidden transition-all duration-300 hover:bg-accent/50 hover:scale-110 active:scale-95 ${isMobileMenuOpen ? 'bg-accent/30 animate-button-pulse' : ''
-                  }`}
-                onClick={handleMenuToggle}
-              >
-                <div className="relative">
-                  <Menu className={`h-5 w-5 transition-all duration-300 ease-out ${isMobileMenuOpen ? 'rotate-180 scale-75 opacity-0' : 'rotate-0 scale-100 opacity-100'
-                    }`} />
-                  <X className={`h-5 w-5 absolute inset-0 transition-all duration-300 ease-out ${isMobileMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-180 scale-75 opacity-0'
-                    }`} />
-                </div>
-              </Button>
+              <div className="flex items-center gap-1 md:hidden">
+                <ThemeToggle />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`transition-all duration-300 hover:bg-accent/50 hover:scale-110 active:scale-95 ${isMobileMenuOpen ? 'bg-accent/30 animate-button-pulse' : ''
+                    }`}
+                  onClick={handleMenuToggle}
+                >
+                  <div className="relative">
+                    <Menu className={`h-5 w-5 transition-all duration-300 ease-out ${isMobileMenuOpen ? 'rotate-180 scale-75 opacity-0' : 'rotate-0 scale-100 opacity-100'
+                      }`} />
+                    <X className={`h-5 w-5 absolute inset-0 transition-all duration-300 ease-out ${isMobileMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-180 scale-75 opacity-0'
+                      }`} />
+                  </div>
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -192,6 +199,7 @@ export function Navigation() {
                       </motion.div>
                     )
                   })}
+
                   <a
                     href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,"
                     style={{

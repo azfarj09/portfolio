@@ -135,9 +135,9 @@ export function Blog() {
                                 </div>
 
                                 <div className="pt-4">
-                                    <Button 
-                                        variant="ghost" 
-                                        size="sm" 
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
                                         className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300 group/btn"
                                         onClick={() => setSelectedPost(post)}
                                     >
@@ -151,9 +151,9 @@ export function Blog() {
                 </div>
 
                 <div className={`text-center mt-12 ${isVisible ? "opacity-100 animate-fade-in-up animate-delay-800" : "opacity-0"}`}>
-                    <Button 
-                        variant="outline" 
-                        size="lg" 
+                    <Button
+                        variant="outline"
+                        size="lg"
                         className="hover:scale-105 transition-all duration-300"
                         onClick={() => setShowAllPosts(true)}
                     >
@@ -165,84 +165,84 @@ export function Blog() {
 
             {/* Blog Post Modal */}
             {selectedPost && (
-            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-scale-in-bounce bg-background">
-                    <div className="relative">
-                        {/* Close Button */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute top-4 right-4 z-10 hover:bg-destructive/20"
-                            onClick={() => setSelectedPost(null)}
-                        >
-                            <X className="h-4 w-4" />
-                        </Button>
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-scale-in-bounce bg-background">
+                        <div className="relative">
+                            {/* Close Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute top-4 right-4 z-10 hover:bg-destructive/20"
+                                onClick={() => setSelectedPost(null)}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
 
-                        {/* Blog Header */}
-                        <div className="relative overflow-hidden">
-                            <img
-                                src={selectedPost.image || "/placeholder.svg"}
-                                alt={selectedPost.title}
-                                className="w-full h-64 object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                            {selectedPost.featured && (
-                                <div className="absolute top-4 left-4 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                                    Featured
+                            {/* Blog Header */}
+                            <div className="relative overflow-hidden">
+                                <img
+                                    src={selectedPost.image || "/placeholder.svg"}
+                                    alt={selectedPost.title}
+                                    className="w-full h-64 object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                {selectedPost.featured && (
+                                    <div className="absolute top-4 left-4 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                                        Featured
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Blog Content */}
+                            <div className="p-8 space-y-6">
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-1">
+                                        <Calendar className="h-4 w-4" />
+                                        <span>{formatDate(selectedPost.date)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <Clock className="h-4 w-4" />
+                                        <span>{selectedPost.readTime}</span>
+                                    </div>
                                 </div>
-                            )}
+
+                                <h1 className="text-3xl md:text-4xl font-bold text-balance">
+                                    {selectedPost.title}
+                                </h1>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {selectedPost.tags.map((tag) => (
+                                        <Badge key={tag} variant="outline" className="text-xs">
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                </div>
+
+                                <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
+                                    <p className="text-lg">{selectedPost.excerpt}</p>
+                                    <div className="mt-6 space-y-4">
+                                        {Array.isArray(selectedPost.content) ? (
+                                            selectedPost.content.map((paragraph, index) => (
+                                                <p key={index}>{paragraph}</p>
+                                            ))
+                                        ) : (
+                                            <p>{selectedPost.content}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="pt-6 border-t border-border flex justify-center">
+                                    <Button
+                                        onClick={() => setSelectedPost(null)}
+                                        className="hover:scale-105 transition-transform duration-300"
+                                    >
+                                        Close Article
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-
-                        {/* Blog Content */}
-                        <div className="p-8 space-y-6">
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                    <Calendar className="h-4 w-4" />
-                                    <span>{formatDate(selectedPost.date)}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Clock className="h-4 w-4" />
-                                    <span>{selectedPost.readTime}</span>
-                                </div>
-                            </div>
-
-                            <h1 className="text-3xl md:text-4xl font-bold text-balance">
-                                {selectedPost.title}
-                            </h1>
-
-                            <div className="flex flex-wrap gap-2">
-                                {selectedPost.tags.map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-xs">
-                                        {tag}
-                                    </Badge>
-                                ))}
-                            </div>
-
-                            <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
-                                <p className="text-lg">{selectedPost.excerpt}</p>
-                                <div className="mt-6 space-y-4">
-                                    {Array.isArray(selectedPost.content) ? (
-                                        selectedPost.content.map((paragraph, index) => (
-                                            <p key={index}>{paragraph}</p>
-                                        ))
-                                    ) : (
-                                        <p>{selectedPost.content}</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="pt-6 border-t border-border">
-                                <Button 
-                                    onClick={() => setSelectedPost(null)}
-                                    className="hover:scale-105 transition-transform duration-300"
-                                >
-                                    Close Article
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
-            </div>
+                    </Card>
+                </div>
             )}
 
             {/* View All Posts Modal */}
@@ -335,7 +335,7 @@ export function Blog() {
                                 <p className="text-sm text-muted-foreground mb-4">
                                     More posts coming soon! Stay tuned for updates on my coding journey.
                                 </p>
-                                <Button 
+                                <Button
                                     variant="outline"
                                     onClick={() => setShowAllPosts(false)}
                                 >
