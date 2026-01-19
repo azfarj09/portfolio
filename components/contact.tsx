@@ -27,6 +27,26 @@ export function Contact() {
   const [errorMessage, setErrorMessage] = useState('')
   const ref = useRef<HTMLElement>(null)
   const hasAnimatedRef = useRef(false)
+  const statusTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Helper function to set status with auto-hide, clearing any previous timeout
+  const setStatusWithAutoHide = (status: 'success' | 'error' | 'rate-limited', message: string = '', duration: number = 5000) => {
+    // Clear any existing timeout to prevent glitchy behavior
+    if (statusTimeoutRef.current) {
+      clearTimeout(statusTimeoutRef.current)
+      statusTimeoutRef.current = null
+    }
+
+    setSubmitStatus(status)
+    setErrorMessage(message)
+
+    // Set new timeout
+    statusTimeoutRef.current = setTimeout(() => {
+      setSubmitStatus('idle')
+      setErrorMessage('')
+      statusTimeoutRef.current = null
+    }, duration)
+  }
 
   useEffect(() => {
     // Small delay to ensure proper mounting
@@ -63,6 +83,13 @@ export function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    // Clear any existing status timeout when starting a new submission
+    if (statusTimeoutRef.current) {
+      clearTimeout(statusTimeoutRef.current)
+      statusTimeoutRef.current = null
+    }
+
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
@@ -84,44 +111,20 @@ export function Contact() {
       })
 
       if (response.ok) {
-        setSubmitStatus('success')
-          ; (e.target as HTMLFormElement).reset()
-
-        // Auto-hide success message after 3 seconds
-        setTimeout(() => {
-          setSubmitStatus('idle')
-        }, 3000)
+        ; (e.target as HTMLFormElement).reset()
+        setStatusWithAutoHide('success', '', 3000)
       } else if (response.status === 429) {
         const errorData = await response.json()
-        setSubmitStatus('rate-limited')
-        setErrorMessage(`Too many requests. Please try again in ${Math.ceil(errorData.retryAfter / 60)} minutes.`)
-
-        // Auto-hide rate limit message after 5 seconds
-        setTimeout(() => {
-          setSubmitStatus('idle')
-          setErrorMessage('')
-        }, 5000)
+        const message = `Too many requests. Please try again in ${Math.ceil(errorData.retryAfter / 60)} minutes.`
+        setStatusWithAutoHide('rate-limited', message, 5000)
       } else {
         const errorData = await response.json()
-        setSubmitStatus('error')
-        setErrorMessage(errorData.message || 'Failed to send message. Please try again.')
-
-        // Auto-hide error message after 3 seconds
-        setTimeout(() => {
-          setSubmitStatus('idle')
-          setErrorMessage('')
-        }, 3000)
+        const message = errorData.message || 'Failed to send message. Please try again.'
+        setStatusWithAutoHide('error', message, 3000)
       }
     } catch (error) {
       console.error('Contact form error:', error)
-      setSubmitStatus('error')
-      setErrorMessage('Network error. Please check your connection and try again.')
-
-      // Auto-hide error message after 3 seconds
-      setTimeout(() => {
-        setSubmitStatus('idle')
-        setErrorMessage('')
-      }, 3000)
+      setStatusWithAutoHide('error', 'Network error. Please check your connection and try again.', 3000)
     } finally {
       setIsSubmitting(false)
     }
