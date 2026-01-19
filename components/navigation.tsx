@@ -85,6 +85,10 @@ export function Navigation() {
 
       <div className={`fixed top-0 left-0 right-0 z-50 flex justify-center w-full px-4 transition-all duration-500 ease-out ${isScrolled ? 'pt-4' : 'pt-2 md:pt-2'}`}>
         <nav
+          aria-label="Main navigation"
+          role="navigation"
+          itemScope
+          itemType="https://schema.org/SiteNavigationElement"
           className={`w-full max-w-[calc(100%-2rem)] md:max-w-7xl rounded-[2rem] ${isScrolled
             ? "md:!max-w-4xl md:rounded-full bg-background/90 backdrop-blur-md border border-border/50 shadow-lg transition-all duration-500 ease-out"
             : isMobileMenuOpen

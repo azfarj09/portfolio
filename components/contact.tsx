@@ -128,11 +128,18 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" ref={ref} className="py-32 px-6 bg-card/30">
+    <section
+      id="contact"
+      ref={ref}
+      className="py-32 px-6 bg-card/30"
+      aria-labelledby="contact-heading"
+      itemScope
+      itemType="https://schema.org/ContactPage"
+    >
       <div className="max-w-6xl mx-auto">
         <div className={`text-center mb-16 ${isVisible ? "opacity-100 animate-fade-in-up" : "opacity-0"}`}>
           <div className="text-sm text-primary font-mono uppercase tracking-wider mb-4">Contact</div>
-          <h2 className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">Let's Connect!</h2>
+          <h2 id="contact-heading" className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">Let's Connect!</h2>
           <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
             I love meeting other developers and learning new things! Whether you want to collaborate on a project, share coding tips, or just chat about tech, I'd love to hear from you.
           </p>

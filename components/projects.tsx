@@ -51,11 +51,18 @@ export function Projects() {
   }, [hasAnimated, isMounted])
 
   return (
-    <section id="projects" ref={ref} className="py-32 px-6">
+    <section
+      id="projects"
+      ref={ref}
+      className="py-32 px-6"
+      aria-labelledby="projects-heading"
+      itemScope
+      itemType="https://schema.org/CollectionPage"
+    >
       <div className="max-w-7xl mx-auto">
         <div className={`text-center mb-16 ${isVisible ? "opacity-100 animate-fade-in-up" : "opacity-0"}`}>
           <div className="text-sm text-primary font-mono uppercase tracking-wider mb-4">Projects</div>
-          <h2 className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">My Projects</h2>
+          <h2 id="projects-heading" className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">My Projects</h2>
           <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
             Here are some projects I've built while learning to code! Each one taught me something new and helped me grow as a developer.
           </p>
@@ -65,9 +72,8 @@ export function Projects() {
           {projects.map((project, index) => (
             <Card
               key={index}
-              className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 hover:rotate-1 cursor-pointer ${
-                isVisible ? `opacity-100 animate-scale-in-bounce` : "opacity-0"
-              }`}
+              className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 hover:rotate-1 cursor-pointer ${isVisible ? `opacity-100 animate-scale-in-bounce` : "opacity-0"
+                }`}
               style={{ animationDelay: `${index * 0.3}s` }}
               onMouseEnter={(e) => e.currentTarget.classList.add('animate-card-hover')}
               onMouseLeave={(e) => {
@@ -92,9 +98,9 @@ export function Projects() {
 
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, techIndex) => (
-                    <Badge 
-                      key={tech} 
-                      variant="outline" 
+                    <Badge
+                      key={tech}
+                      variant="outline"
                       className="text-xs hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-default"
                       style={{ animationDelay: `${techIndex * 50}ms` }}
                     >
@@ -111,9 +117,9 @@ export function Projects() {
                     </a>
                   </Button>
                   {project.title === "Tic Tac Toe Game" ? (
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300"
                       onClick={() => setShowTicTacToe(true)}
                     >
@@ -121,9 +127,9 @@ export function Projects() {
                       Live Demo
                     </Button>
                   ) : project.title === "Portfolio Website" ? (
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300"
                       onClick={() => setShowNotification(true)}
                     >
@@ -146,9 +152,9 @@ export function Projects() {
       </div>
 
       {/* Tic Tac Toe Demo Modal */}
-      <TicTacToeDemo 
-        isOpen={showTicTacToe} 
-        onClose={() => setShowTicTacToe(false)} 
+      <TicTacToeDemo
+        isOpen={showTicTacToe}
+        onClose={() => setShowTicTacToe(false)}
       />
 
       {/* Portfolio Notification */}

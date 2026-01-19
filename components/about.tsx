@@ -1,13 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { 
-  Code2, 
-  Database, 
-  Server, 
-  Cloud, 
-  Container, 
-  Zap, 
+import {
+  Code2,
+  Database,
+  Server,
+  Cloud,
+  Container,
+  Zap,
   Palette,
   Globe,
   FileCode,
@@ -41,7 +41,7 @@ export function About() {
 
     // Initial check
     checkScreenSize()
-    
+
     // Listen for resize events
     window.addEventListener('resize', checkScreenSize)
     window.addEventListener('orientationchange', checkScreenSize)
@@ -77,13 +77,20 @@ export function About() {
   }, [hasAnimated, isMounted])
 
   return (
-    <section id="about" ref={ref} className="py-32 px-6">
+    <section
+      id="about"
+      ref={ref}
+      className="py-32 px-6"
+      aria-labelledby="about-heading"
+      itemScope
+      itemType="https://schema.org/AboutPage"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className={`space-y-8 ${isVisible ? "opacity-100 animate-slide-in-left" : "opacity-0"}`}>
             <div className="space-y-4">
               <div className="text-sm text-primary font-mono uppercase tracking-wider hover:text-accent transition-colors duration-300">About</div>
-              <h2 className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">My Coding Journey</h2>
+              <h2 id="about-heading" className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">My Coding Journey</h2>
             </div>
 
             <div className="space-y-6 text-muted-foreground text-lg leading-relaxed">
@@ -125,9 +132,8 @@ export function About() {
                       return (
                         <div
                           key={tech.name}
-                          className={`flex items-center gap-3 text-sm text-muted-foreground hover:text-primary hover:scale-110 hover:translate-x-2 transition-all duration-300 cursor-default p-3 rounded-lg hover:bg-primary/10 group/tech ${
-                            isVisible ? 'animate-slide-in-right' : 'opacity-0'
-                          }`}
+                          className={`flex items-center gap-3 text-sm text-muted-foreground hover:text-primary hover:scale-110 hover:translate-x-2 transition-all duration-300 cursor-default p-3 rounded-lg hover:bg-primary/10 group/tech ${isVisible ? 'animate-slide-in-right' : 'opacity-0'
+                            }`}
                           style={{ animationDelay: `${(index * 0.1) + 0.6}s` }}
                         >
                           {(typeof window === 'undefined' || window.innerWidth >= 375) && (

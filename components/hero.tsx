@@ -22,7 +22,13 @@ export function Hero() {
   if (!mounted) return null
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section
+      id="hero"
+      aria-label="Introduction to Azfar Jamil, Full Stack Developer"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      itemScope
+      itemType="https://schema.org/WPHeader"
+    >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
 

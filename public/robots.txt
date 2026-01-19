@@ -1,8 +1,51 @@
+# Robots.txt for Azfar Jamil Portfolio
+# https://azfarj.vercel.app
+
+# Allow all major search engine crawlers
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Default rule for all other bots
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
-# Sitemap
+# Disallow access to private/system files
+Disallow: /_next/static/
+Disallow: /api/
+Disallow: /*.json$
+
+# Allow access to important files
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /site.webmanifest
+Allow: /*.png$
+Allow: /*.svg$
+Allow: /*.ico$
+
+# Sitemaps
 Sitemap: https://azfarj.vercel.app/sitemap.xml
 
-# Crawl-delay for respectful crawling
-Crawl-delay: 1
+# Host directive (for Yandex)
+Host: https://azfarj.vercel.app
