@@ -39,14 +39,14 @@ export function ThemeToggle() {
         >
             {/* Sun icon - visible in dark mode, click to switch to light */}
             <Sun
-                className={`h-5 w-5 absolute transition-all duration-500 ease-in-out ${isDark
+                className={`h-5 w-5 absolute transition-all duration-500 ease-in-out text-white ${isDark
                     ? "rotate-0 scale-100 opacity-100"
                     : "rotate-90 scale-0 opacity-0"
                     }`}
             />
             {/* Moon icon - visible in light mode, click to switch to dark */}
             <Moon
-                className={`h-5 w-5 absolute transition-all duration-500 ease-in-out ${isDark
+                className={`h-5 w-5 absolute transition-all duration-500 ease-in-out text-black ${isDark
                     ? "-rotate-90 scale-0 opacity-0"
                     : "rotate-0 scale-100 opacity-100"
                     }`}
@@ -84,11 +84,11 @@ export function MobileThemeToggle() {
         >
             <div className="w-4 h-4 mr-2 relative">
                 <Sun
-                    className={`w-4 h-4 absolute inset-0 transition-all duration-300 ${isDark ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"
+                    className={`w-4 h-4 absolute inset-0 transition-all duration-300 text-white ${isDark ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"
                         }`}
                 />
                 <Moon
-                    className={`w-4 h-4 absolute inset-0 transition-all duration-300 ${isDark ? "-rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
+                    className={`w-4 h-4 absolute inset-0 transition-all duration-300 text-black ${isDark ? "-rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
                         }`}
                 />
             </div>
