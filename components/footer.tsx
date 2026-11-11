@@ -1,5 +1,6 @@
 import { Github, Linkedin, Mail } from "lucide-react"
 import { links, navItems } from "@/lib/site-data"
+import { CurrentYear } from "@/components/current-year"
 
 export function Footer() {
   return (
@@ -56,7 +57,9 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="footer__legal">© 2025 Azfar Jamil. Built with Next.js and Tailwind CSS.</p>
+        <p className="footer__legal">
+          © <CurrentYear initial={new Date().getFullYear()} /> Azfar Jamil. Built with Next.js and Tailwind CSS.
+        </p>
       </div>
 
       {/* Oversized wordmark, cropped by the bottom of the page */}
