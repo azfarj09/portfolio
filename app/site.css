@@ -67,7 +67,9 @@
 /* ---------- Tokens ---------- */
 
 :root {
-  color-scheme: light;
+  /* "only" stops phone browsers (Chrome's auto-dark, Samsung Internet's dark
+     mode) from repainting the light theme darker when the phone is in dark mode. */
+  color-scheme: only light;
 
   --paper: #f2ede3;
   --paper-raised: #faf7f0;

@@ -388,7 +388,10 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://github.com" />
         <link rel="dns-prefetch" href="https://www.linkedin.com" />
 
-        {/* Theme color for mobile browsers */}
+        {/* Tells browsers the site has its own light and dark themes */}
+        <meta name="color-scheme" content="light dark" />
+
+        {/* Theme color for mobile browsers (kept in sync with the chosen theme in ThemeProvider) */}
         <meta name="theme-color" content="#12110e" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#f2ede3" media="(prefers-color-scheme: light)" />
 
@@ -410,6 +413,8 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
+          // color-scheme is set in site.css instead, so light mode can say "only light"
+          enableColorScheme={false}
           disableTransitionOnChange={false}
         >
           <Suspense fallback={null}>{children}</Suspense>
