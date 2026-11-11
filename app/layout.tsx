@@ -2,10 +2,29 @@ import type React from "react"
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { Bricolage_Grotesque, Instrument_Serif } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
+import "./site.css"
+
+// Display face for headings and the big name
+const displayFont = Bricolage_Grotesque({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-display",
+  display: "swap",
+})
+
+// Italic serif used for the accent word in each heading
+const serifFont = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: {
@@ -339,7 +358,7 @@ export default function RootLayout({
           "description": "AI-powered PDF toolkit with summarization, flashcard generation, and interactive chat",
           "programmingLanguage": ["TypeScript", "JavaScript"],
           "runtimePlatform": "Next.js",
-          "codeRepository": "https://github.com/azfarj09/ai-pdf-summarizer",
+          "codeRepository": "https://github.com/azfarj09/ai-pdf-tools",
           "url": "https://ai-pdf-tools.vercel.app",
           "author": { "@id": "https://azfarj.vercel.app/#person" }
         }
@@ -357,7 +376,11 @@ export default function RootLayout({
   ]
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable} ${displayFont.variable} ${serifFont.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Preconnect hints for performance optimization */}
         <link rel="preconnect" href="https://github.com" />
@@ -366,8 +389,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.linkedin.com" />
 
         {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#65a3ff" media="(prefers-color-scheme: dark)" />
-        <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#12110e" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#f2ede3" media="(prefers-color-scheme: light)" />
 
         {/* Additional SEO meta tags */}
         <meta name="format-detection" content="telephone=no" />
@@ -382,10 +405,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+      <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange={false}
         >

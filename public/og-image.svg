@@ -1,6 +1,5 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="6" fill="#000000"/>
-  <rect x="2" y="2" width="28" height="28" rx="4" stroke="#4F8EF7" stroke-width="2" fill="none"/>
-  <text x="16" y="22" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#4F8EF7">A</text>
-  <text x="20" y="22" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#00D4AA">J</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#2b50ff"/>
+  <g fill="#ffffff"><path fill-rule="evenodd" d="M4 25 10.7 7h6.6L24 25h-5.6l-1.15-3.5h-6.5L9.6 25H4Zm8.15-7.7h3.7L14 11.6l-1.85 5.7Z"/></g>
+  <circle cx="26.4" cy="22.6" r="2.4" fill="#ffffff"/>
 </svg>

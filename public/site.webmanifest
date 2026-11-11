@@ -4,8 +4,8 @@
   "description": "13-year-old Full Stack Developer passionate about modern web technologies",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#65a3ff",
+  "background_color": "#f2ede3",
+  "theme_color": "#2b50ff",
   "orientation": "portrait-primary",
   "icons": [
     {

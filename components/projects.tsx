@@ -1,168 +1,120 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Github } from "lucide-react"
+import { useCallback, useState } from "react"
+import { ArrowUpRight, Github } from "lucide-react"
+import { Reveal } from "@/components/reveal"
 import { TicTacToeDemo } from "./tic-tac-toe-demo"
 import { Notification } from "./notification"
 import projects from "./projects.json"
 
 export function Projects() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [hasAnimated, setHasAnimated] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
   const [showTicTacToe, setShowTicTacToe] = useState(false)
   const [showNotification, setShowNotification] = useState(false)
-  const ref = useRef<HTMLElement>(null)
+  const hideNotification = useCallback(() => setShowNotification(false), [])
 
-  useEffect(() => {
-    // Small delay to ensure proper mounting
-    const mountTimer = setTimeout(() => {
-      setIsMounted(true)
-    }, 50)
-
-    return () => clearTimeout(mountTimer)
-  }, [])
-
-  useEffect(() => {
-    if (!isMounted) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          // Add a small delay to ensure smooth animation start
-          setTimeout(() => {
-            setIsVisible(true)
-            setHasAnimated(true)
-          }, 50)
-          observer.disconnect() // Stop observing once animated
-        }
-      },
-      { threshold: 0.15, rootMargin: '-20px' }, // Require more of the element to be visible
+  // Tic Tac Toe opens a playable demo, the portfolio is the page you're on,
+  // and everything else links out to its live site.
+  const renderLiveDemo = (project: (typeof projects)[number]) => {
+    const className = "btn btn--primary btn--sm btn--out"
+    const label = (
+      <>
+        Live Demo
+        <ArrowUpRight />
+      </>
     )
 
-    if (ref.current) {
-      observer.observe(ref.current)
+    if (project.title === "Tic Tac Toe Game") {
+      return (
+        <button type="button" className={className} onClick={() => setShowTicTacToe(true)}>
+          {label}
+        </button>
+      )
     }
 
-    return () => observer.disconnect()
-  }, [hasAnimated, isMounted])
+    if (project.title === "Portfolio Website") {
+      return (
+        <button type="button" className={className} onClick={() => setShowNotification(true)}>
+          {label}
+        </button>
+      )
+    }
+
+    return (
+      <a href={project.live} target="_blank" rel="noopener noreferrer" className={className}>
+        {label}
+      </a>
+    )
+  }
 
   return (
     <section
       id="projects"
-      ref={ref}
-      className="py-32 px-6"
+      className="section section--raised"
       aria-labelledby="projects-heading"
       itemScope
       itemType="https://schema.org/CollectionPage"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className={`text-center mb-16 ${isVisible ? "opacity-100 animate-fade-in-up" : "opacity-0"}`}>
-          <div className="text-sm text-primary font-mono uppercase tracking-wider mb-4">Projects</div>
-          <h2 id="projects-heading" className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">My Projects</h2>
-          <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
-            Here are some projects I've built while learning to code! Each one taught me something new and helped me grow as a developer.
+      <div className="wrap">
+        <Reveal as="header" className="sec-head">
+          <p className="eyebrow">
+            <span className="eyebrow__num">02</span>
+            Projects
           </p>
-        </div>
+          <h2 id="projects-heading" className="sec-title">
+            My <em>Projects</em>
+          </h2>
+          <p className="sec-intro">
+            Here are some projects I've built while learning to code! Each one taught me something new and helped me
+            grow as a developer.
+          </p>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <ol className="projects">
           {projects.map((project, index) => (
-            <Card
-              key={index}
-              className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 hover:rotate-1 cursor-pointer ${isVisible ? `opacity-100 animate-scale-in-bounce` : "opacity-0"
-                }`}
-              style={{ animationDelay: `${index * 0.3}s` }}
-              onMouseEnter={(e) => e.currentTarget.classList.add('animate-card-hover')}
-              onMouseLeave={(e) => {
-                e.currentTarget.classList.remove('animate-card-hover')
-                e.currentTarget.classList.add('animate-card-unhover')
-              }}
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  className="w-full h-48 object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-2"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-accent/20 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                <div className="absolute top-4 right-4 w-8 h-8 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-all duration-300" />
+            <Reveal as="li" key={project.title} className="project">
+              <div className="project__media">
+                <div className="frame">
+                  <div className="frame__bar" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                    <span>{project.title}</span>
+                  </div>
+                  <img src={project.image || "/placeholder.svg"} alt={project.title} loading="lazy" />
+                </div>
               </div>
 
-              <div className="p-6 space-y-4">
-                <h3 className="text-xl font-semibold group-hover:text-primary transition-all duration-300 transform group-hover:translate-x-2">{project.title}</h3>
+              <div className="project__body">
+                <span className="project__num" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="project__title">{project.title}</h3>
+                <p className="project__desc">{project.description}</p>
 
-                <p className="text-muted-foreground text-sm leading-relaxed group-hover:text-foreground transition-colors duration-300">{project.description}</p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, techIndex) => (
-                    <Badge
-                      key={tech}
-                      variant="outline"
-                      className="text-xs hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-default"
-                      style={{ animationDelay: `${techIndex * 50}ms` }}
-                    >
-                      {tech}
-                    </Badge>
+                <ul className="tags">
+                  {project.technologies.map((tech) => (
+                    <li key={tech}>{tech}</li>
                   ))}
-                </div>
+                </ul>
 
-                <div className="flex items-center gap-4 pt-4">
-                  <Button variant="ghost" size="sm" className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300" asChild>
-                    <a href={project.github} target="_blank" rel="noopener noreferrer">
-                      <Github className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                      Code
-                    </a>
-                  </Button>
-                  {project.title === "Tic Tac Toe Game" ? (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300"
-                      onClick={() => setShowTicTacToe(true)}
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
-                      Live Demo
-                    </Button>
-                  ) : project.title === "Portfolio Website" ? (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300"
-                      onClick={() => setShowNotification(true)}
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
-                      Live Demo
-                    </Button>
-                  ) : (
-                    <Button variant="ghost" size="sm" className="hover:text-primary hover:scale-105 hover:shadow-md transition-all duration-300" asChild>
-                      <a href={project.live} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4 mr-2 group-hover:-rotate-12 transition-transform duration-300" />
-                        Live Demo
-                      </a>
-                    </Button>
-                  )}
+                <div className="project__actions">
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn--ghost btn--sm">
+                    <Github />
+                    Code
+                  </a>
+                  {renderLiveDemo(project)}
                 </div>
               </div>
-            </Card>
+            </Reveal>
           ))}
-        </div>
+        </ol>
       </div>
 
       {/* Tic Tac Toe Demo Modal */}
-      <TicTacToeDemo
-        isOpen={showTicTacToe}
-        onClose={() => setShowTicTacToe(false)}
-      />
+      <TicTacToeDemo isOpen={showTicTacToe} onClose={() => setShowTicTacToe(false)} />
 
       {/* Portfolio Notification */}
-      <Notification
-        message="You are already on this website!"
-        isVisible={showNotification}
-        onHide={() => setShowNotification(false)}
-      />
+      <Notification message="You are already on this website!" isVisible={showNotification} onHide={hideNotification} />
     </section>
   )
 }

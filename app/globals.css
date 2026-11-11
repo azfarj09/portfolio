@@ -1,55 +1,62 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 @import "tailwindcss";
+
+/*
+  The site's own look lives in ./site.css (imported from app/layout.tsx).
+
+  The variables below only feed the shadcn/ui primitives in components/ui,
+  so anything built with them later picks up the same palette.
+*/
+
+@custom-variant dark (&:is(.dark *));
 
 /* Light mode (default) */
 :root {
-  --color-background: oklch(0.98 0.01 240);
-  --color-foreground: oklch(0.15 0.02 240);
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.15 0.02 240);
-  --color-popover: oklch(1 0 0);
-  --color-popover-foreground: oklch(0.15 0.02 240);
-  --color-primary: oklch(0.55 0.18 200);
-  --color-primary-foreground: oklch(0.98 0.01 240);
-  --color-secondary: oklch(0.94 0.02 240);
-  --color-secondary-foreground: oklch(0.25 0.02 240);
-  --color-muted: oklch(0.94 0.02 240);
-  --color-muted-foreground: oklch(0.45 0.02 240);
-  --color-accent: oklch(0.55 0.18 200);
-  --color-accent-foreground: oklch(0.98 0.01 240);
-  --color-destructive: oklch(0.577 0.245 27.325);
-  --color-destructive-foreground: oklch(0.98 0.01 240);
-  --color-border: oklch(0.88 0.02 240);
-  --color-input: oklch(0.94 0.02 240);
-  --color-ring: oklch(0.55 0.18 200);
+  --color-background: #f2ede3;
+  --color-foreground: #17140f;
+  --color-card: #faf7f0;
+  --color-card-foreground: #17140f;
+  --color-popover: #faf7f0;
+  --color-popover-foreground: #17140f;
+  --color-primary: #2b50ff;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e7e0d2;
+  --color-secondary-foreground: #17140f;
+  --color-muted: #e7e0d2;
+  --color-muted-foreground: #5b5448;
+  --color-accent: #2b50ff;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #d92d3a;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgb(23 20 15 / 0.15);
+  --color-input: #e7e0d2;
+  --color-ring: #2b50ff;
   --radius: 0.75rem;
-  --font-nunito: 'Nunito', sans-serif;
 }
 
 /* Dark mode */
 .dark {
-  --color-background: oklch(0.08 0.02 240);
-  --color-foreground: oklch(0.95 0.01 240);
-  --color-card: oklch(0.12 0.02 240);
-  --color-card-foreground: oklch(0.95 0.01 240);
-  --color-popover: oklch(0.12 0.02 240);
-  --color-popover-foreground: oklch(0.95 0.01 240);
-  --color-primary: oklch(0.65 0.15 200);
-  --color-primary-foreground: oklch(0.95 0.01 240);
-  --color-secondary: oklch(0.15 0.02 240);
-  --color-secondary-foreground: oklch(0.8 0.01 240);
-  --color-muted: oklch(0.15 0.02 240);
-  --color-muted-foreground: oklch(0.6 0.01 240);
-  --color-accent: oklch(0.65 0.15 200);
-  --color-accent-foreground: oklch(0.95 0.01 240);
-  --color-destructive: oklch(0.577 0.245 27.325);
-  --color-destructive-foreground: oklch(0.95 0.01 240);
-  --color-border: oklch(0.2 0.02 240);
-  --color-input: oklch(0.15 0.02 240);
-  --color-ring: oklch(0.65 0.15 200);
+  --color-background: #12110e;
+  --color-foreground: #f0eadf;
+  --color-card: #1c1a16;
+  --color-card-foreground: #f0eadf;
+  --color-popover: #1c1a16;
+  --color-popover-foreground: #f0eadf;
+  --color-primary: #3560ff;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #26231e;
+  --color-secondary-foreground: #f0eadf;
+  --color-muted: #26231e;
+  --color-muted-foreground: #a8a092;
+  --color-accent: #3560ff;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #ff6b76;
+  --color-destructive-foreground: #17140f;
+  --color-border: rgb(240 234 223 / 0.15);
+  --color-input: #26231e;
+  --color-ring: #3560ff;
 }
 
-/* Legacy @theme for Tailwind v4 compatibility */
+/* Expose the variables above to Tailwind as theme colors */
 @theme {
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
@@ -71,467 +78,10 @@
   --color-input: var(--color-input);
   --color-ring: var(--color-ring);
   --radius: 0.75rem;
-  --font-nunito: 'Nunito', sans-serif;
 }
-
-
 
 @layer base {
   * {
     @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    overflow-x: hidden;
-  }
-
-  html {
-    overflow-x: hidden;
-  }
-
-  /* Added smooth scrolling and custom animations */
-  html {
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-50px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  @keyframes glow {
-
-    0%,
-    100% {
-      box-shadow: 0 0 20px rgba(101, 163, 255, 0.3);
-    }
-
-    50% {
-      box-shadow: 0 0 30px rgba(101, 163, 255, 0.6);
-    }
-  }
-
-  @keyframes blink {
-
-    0%,
-    50% {
-      opacity: 1;
-    }
-
-    51%,
-    100% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes slideDownBounce {
-    0% {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-
-    60% {
-      opacity: 1;
-      transform: translateY(5px) scale(1.02);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  @keyframes slideUpBounce {
-    0% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    100% {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-  }
-
-  @keyframes menuItemSlide {
-    0% {
-      opacity: 0;
-      transform: translateX(-30px) translateY(10px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateX(0) translateY(0);
-    }
-  }
-
-  @keyframes menuItemSlideOut {
-    0% {
-      opacity: 1;
-      transform: translateX(0) translateY(0);
-    }
-
-    100% {
-      opacity: 0;
-      transform: translateX(-30px) translateY(-10px);
-    }
-  }
-
-  @keyframes overlayFadeIn {
-    0% {
-      opacity: 0;
-      backdrop-filter: blur(0px);
-    }
-
-    100% {
-      opacity: 1;
-      backdrop-filter: blur(4px);
-    }
-  }
-
-  @keyframes overlayFadeOut {
-    0% {
-      opacity: 1;
-      backdrop-filter: blur(4px);
-    }
-
-    100% {
-      opacity: 0;
-      backdrop-filter: blur(0px);
-    }
-  }
-
-  @keyframes buttonPulse {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(101, 163, 255, 0.4);
-    }
-
-    70% {
-      transform: scale(1.05);
-      box-shadow: 0 0 0 10px rgba(101, 163, 255, 0);
-    }
-
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(101, 163, 255, 0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out forwards;
-  }
-
-  .animate-slide-in-left {
-    animation: slideInLeft 0.8s ease-out forwards;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite;
-  }
-
-  .animate-blink {
-    animation: blink 1s infinite;
-  }
-
-  .animate-delay-200 {
-    animation-delay: 0.2s;
-  }
-
-  .animate-delay-400 {
-    animation-delay: 0.4s;
-  }
-
-  .animate-delay-600 {
-    animation-delay: 0.6s;
-  }
-
-  .animate-delay-800 {
-    animation-delay: 0.8s;
-  }
-
-  .animate-slide-down-bounce {
-    animation: slideDownBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-slide-up-bounce {
-    animation: slideUpBounce 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-menu-item-slide {
-    animation: menuItemSlide 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-menu-item-slide-out {
-    animation: menuItemSlideOut 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-overlay-fade-in {
-    animation: overlayFadeIn 0.3s ease-out forwards;
-  }
-
-  .animate-overlay-fade-out {
-    animation: overlayFadeOut 0.3s ease-out forwards;
-  }
-
-  .animate-button-pulse {
-    animation: buttonPulse 0.6s ease-out;
-  }
-
-  .animate-delay-50 {
-    animation-delay: 0.05s;
-  }
-
-  .animate-delay-100 {
-    animation-delay: 0.1s;
-  }
-
-  .animate-delay-150 {
-    animation-delay: 0.15s;
-  }
-
-  @keyframes heroTextReveal {
-    0% {
-      opacity: 0;
-      transform: translateY(50px) scale(0.9);
-      filter: blur(10px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      filter: blur(0px);
-    }
-  }
-
-  @keyframes cardHover {
-    0% {
-      transform: translateY(0) scale(1);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    100% {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-  }
-
-  @keyframes cardUnhover {
-    0% {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-
-    100% {
-      transform: translateY(0) scale(1);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  @keyframes slideInFromLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-100px) rotate(-5deg);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateX(0) rotate(0deg);
-    }
-  }
-
-  @keyframes slideInFromRight {
-    0% {
-      opacity: 0;
-      transform: translateX(100px) rotate(5deg);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateX(0) rotate(0deg);
-    }
-  }
-
-  @keyframes scaleInBounce {
-    0% {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-
-    40% {
-      opacity: 1;
-      transform: scale(0.95);
-    }
-
-    70% {
-      transform: scale(1.05);
-    }
-
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes bounceOnly {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-
-    1% {
-      opacity: 1;
-    }
-
-    50% {
-      transform: scale(1.05);
-    }
-
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes textShimmer {
-    0% {
-      background-position: -200% center;
-    }
-
-    100% {
-      background-position: 200% center;
-    }
-  }
-
-  @keyframes morphingBlob {
-
-    0%,
-    100% {
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-      transform: rotate(0deg) scale(1);
-    }
-
-    25% {
-      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-      transform: rotate(90deg) scale(1.1);
-    }
-
-    50% {
-      border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
-      transform: rotate(180deg) scale(0.9);
-    }
-
-    75% {
-      border-radius: 60% 40% 60% 30% / 70% 30% 60% 70%;
-      transform: rotate(270deg) scale(1.05);
-    }
-  }
-
-  @keyframes buttonMagic {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(101, 163, 255, 0.7);
-    }
-
-    50% {
-      transform: scale(1.05);
-      box-shadow: 0 0 0 15px rgba(101, 163, 255, 0);
-    }
-
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(101, 163, 255, 0);
-    }
-  }
-
-  .animate-hero-text-reveal {
-    animation: heroTextReveal 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-card-hover {
-    animation: cardHover 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-card-unhover {
-    animation: cardUnhover 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-slide-in-left {
-    animation: slideInFromLeft 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-slide-in-right {
-    animation: slideInFromRight 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-scale-in-bounce {
-    animation: scaleInBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-bounce-only {
-    animation: bounceOnly 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  }
-
-  .animate-text-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(101, 163, 255, 0.4), transparent);
-    background-size: 200% 100%;
-    animation: textShimmer 2s infinite;
-  }
-
-  .animate-morphing-blob {
-    animation: morphingBlob 8s ease-in-out infinite;
-  }
-
-  .animate-button-magic {
-    animation: buttonMagic 0.6s ease-out;
-  }
-
-  .animate-delay-1000 {
-    animation-delay: 1s;
-  }
-
-  .animate-delay-1200 {
-    animation-delay: 1.2s;
-  }
-
-  .animate-delay-1400 {
-    animation-delay: 1.4s;
   }
 }

@@ -1,326 +1,275 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Send, Github, Linkedin } from "lucide-react"
+import { useRef, useState } from "react"
+import { ArrowUpRight, Check, Mail, MapPin, Send } from "lucide-react"
+import { DiscordIcon } from "@/components/icons"
+import { Reveal } from "@/components/reveal"
+import {
+  CONTACT_FIELDS,
+  CONTACT_LIMITS,
+  EMPTY_CONTACT,
+  cleanContactValues,
+  validateContact,
+  validateContactField,
+  type ContactErrors,
+  type ContactField,
+  type ContactValues,
+} from "@/lib/contact"
+import { links } from "@/lib/site-data"
 
-// Custom Discord Icon Component
-const DiscordIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z" />
-  </svg>
-)
+// What the area under the button is showing.
+//   error        the server (or network) failed
+//   unavailable  the server has no email settings, so it cannot send at all
+//   rate-limited too many messages from this visitor
+type Notice = { kind: "error" | "unavailable" | "rate-limited"; message: string } | null
 
 export function Contact() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const [values, setValues] = useState<ContactValues>(EMPTY_CONTACT)
+  const [errors, setErrors] = useState<ContactErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'rate-limited'>('idle')
-  const [errorMessage, setErrorMessage] = useState('')
-  const ref = useRef<HTMLElement>(null)
-  const hasAnimatedRef = useRef(false)
-  const statusTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [notice, setNotice] = useState<Notice>(null)
+  const [sentName, setSentName] = useState<string | null>(null) // set once a message has gone through
+  const honeypotRef = useRef<HTMLInputElement>(null)
 
-  // Helper function to set status with auto-hide, clearing any previous timeout
-  const setStatusWithAutoHide = (status: 'success' | 'error' | 'rate-limited', message: string = '', duration: number = 5000) => {
-    // Clear any existing timeout to prevent glitchy behavior
-    if (statusTimeoutRef.current) {
-      clearTimeout(statusTimeoutRef.current)
-      statusTimeoutRef.current = null
+  const handleChange =
+    (field: ContactField) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = e.target.value
+      setValues((current) => ({ ...current, [field]: value }))
+      // Once a field has been flagged, re-check it as the visitor types so the error clears itself.
+      if (errors[field]) {
+        setErrors((current) => ({ ...current, [field]: validateContactField(field, value) }))
+      }
     }
 
-    setSubmitStatus(status)
-    setErrorMessage(message)
-
-    // Set new timeout
-    statusTimeoutRef.current = setTimeout(() => {
-      setSubmitStatus('idle')
-      setErrorMessage('')
-      statusTimeoutRef.current = null
-    }, duration)
+  const handleBlur = (field: ContactField) => () => {
+    if (values[field].trim() === "") return // don't nag about fields they haven't reached yet
+    setErrors((current) => ({ ...current, [field]: validateContactField(field, values[field]) }))
   }
 
-  useEffect(() => {
-    // Small delay to ensure proper mounting
-    const mountTimer = setTimeout(() => {
-      setIsMounted(true)
-    }, 50)
-
-    return () => clearTimeout(mountTimer)
-  }, [])
-
-  useEffect(() => {
-    if (!isMounted) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimatedRef.current) {
-          hasAnimatedRef.current = true
-          // Add a small delay to ensure smooth animation start
-          setTimeout(() => {
-            setIsVisible(true)
-          }, 50)
-          observer.disconnect() // Stop observing once animated
-        }
-      },
-      { threshold: 0.15, rootMargin: '-20px' }, // Require more of the element to be visible
-    )
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => observer.disconnect()
-  }, [isMounted])
+  const focusFirstInvalid = (problems: ContactErrors) => {
+    const first = CONTACT_FIELDS.find((field) => problems[field])
+    if (first) document.getElementById(`contact-${first}`)?.focus()
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (isSubmitting) return
 
-    // Clear any existing status timeout when starting a new submission
-    if (statusTimeoutRef.current) {
-      clearTimeout(statusTimeoutRef.current)
-      statusTimeoutRef.current = null
+    const data = cleanContactValues(values)
+    const problems = validateContact(data)
+    setErrors(problems)
+    if (Object.keys(problems).length > 0) {
+      focusFirstInvalid(problems)
+      return
     }
 
     setIsSubmitting(true)
-    setSubmitStatus('idle')
-
-    const formData = new FormData(e.currentTarget)
-    const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      subject: formData.get('subject') as string,
-      message: formData.get('message') as string,
-    }
+    setNotice(null)
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, website: honeypotRef.current?.value ?? "" }),
       })
 
       if (response.ok) {
-        ; (e.target as HTMLFormElement).reset()
-        setStatusWithAutoHide('success', '', 3000)
-      } else if (response.status === 429) {
-        const errorData = await response.json()
-        const message = `Too many requests. Please try again in ${Math.ceil(errorData.retryAfter / 60)} minutes.`
-        setStatusWithAutoHide('rate-limited', message, 5000)
+        setSentName(data.name.split(/\s+/)[0])
+        setValues(EMPTY_CONTACT)
+        setErrors({})
+        return
+      }
+
+      const errorData = await response.json().catch(() => ({}))
+
+      if (response.status === 429) {
+        const minutes = Math.max(1, Math.ceil((Number(errorData.retryAfter) || 60) / 60))
+        setNotice({
+          kind: "rate-limited",
+          message: `Too many requests. Please try again in ${minutes} minute${minutes === 1 ? "" : "s"}.`,
+        })
+      } else if (response.status === 400 && errorData.errors) {
+        setErrors(errorData.errors)
+        focusFirstInvalid(errorData.errors)
+      } else if (errorData.code === "not_configured") {
+        setNotice({ kind: "unavailable", message: "This form can't send messages right now." })
       } else {
-        const errorData = await response.json()
-        const message = errorData.message || 'Failed to send message. Please try again.'
-        setStatusWithAutoHide('error', message, 3000)
+        setNotice({ kind: "error", message: "Failed to send message. Please try again." })
       }
     } catch (error) {
-      console.error('Contact form error:', error)
-      setStatusWithAutoHide('error', 'Network error. Please check your connection and try again.', 3000)
+      console.error("Contact form error:", error)
+      setNotice({ kind: "error", message: "Network error. Please check your connection and try again." })
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  // If the form can't deliver, the visitor can still send the same message from their own email app.
+  const mailtoFallback =
+    `${links.mailto}?subject=${encodeURIComponent(values.subject.trim())}` +
+    `&body=${encodeURIComponent(`${values.message.trim()}\n\n${values.name.trim()}\n${values.email.trim()}`)}`
+
+  const fieldProps = (field: ContactField) => ({
+    id: `contact-${field}`,
+    name: field,
+    value: values[field],
+    onChange: handleChange(field),
+    onBlur: handleBlur(field),
+    maxLength: CONTACT_LIMITS[field],
+    "aria-invalid": errors[field] ? true : undefined,
+    "aria-describedby": errors[field] ? `contact-${field}-error` : undefined,
+  })
+
+  const fieldError = (field: ContactField) =>
+    errors[field] && (
+      <p id={`contact-${field}-error`} className="field__error">
+        {errors[field]}
+      </p>
+    )
+
+  const messageLength = values.message.length
+
   return (
     <section
       id="contact"
-      ref={ref}
-      className="py-32 px-6 bg-card/30"
+      className="section band"
       aria-labelledby="contact-heading"
       itemScope
       itemType="https://schema.org/ContactPage"
     >
-      <div className="max-w-6xl mx-auto">
-        <div className={`text-center mb-16 ${isVisible ? "opacity-100 animate-fade-in-up" : "opacity-0"}`}>
-          <div className="text-sm text-primary font-mono uppercase tracking-wider mb-4">Contact</div>
-          <h2 id="contact-heading" className="text-4xl md:text-5xl font-bold text-balance hover:text-primary transition-colors duration-500 cursor-default">Let's Connect!</h2>
-          <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
-            I love meeting other developers and learning new things! Whether you want to collaborate on a project, share coding tips, or just chat about tech, I'd love to hear from you.
+      <div className="wrap">
+        <Reveal as="header" className="sec-head">
+          <p className="eyebrow">
+            <span className="eyebrow__num">04</span>
+            Contact
           </p>
-        </div>
+          <h2 id="contact-heading" className="sec-title">
+            Let's <em>Connect!</em>
+          </h2>
+          <p className="sec-intro">
+            I love meeting other developers and learning new things! Whether you want to collaborate on a project,
+            share coding tips, or just chat about tech, I'd love to hear from you.
+          </p>
+        </Reveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="contact">
           {/* Contact Info */}
-          <div className={`space-y-8 ${isVisible ? "opacity-100 animate-slide-in-left" : "opacity-0"}`}>
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold hover:text-primary transition-colors duration-300 cursor-default">Get in Touch</h3>
-              <p className="text-muted-foreground leading-relaxed hover:text-foreground transition-colors duration-300">
-                I'm always excited to connect with fellow developers, learn from others, and share what I've discovered on my coding journey. Feel free to reach out!
-              </p>
-            </div>
+          <Reveal className="contact__info">
+            <h3 className="contact__heading">Get in Touch</h3>
+            <p className="contact__text">
+              I'm always excited to connect with fellow developers, learn from others, and share what I've discovered
+              on my coding journey. Feel free to reach out!
+            </p>
 
-            <div className="space-y-4">
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-200' : 'opacity-0'
-                }`}>
-                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
-                  <Mail className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
-                </div>
-                <div>
-                  <div className="font-medium group-hover:text-primary transition-colors duration-300">Email</div>
-                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfarj09@gmail.com</div>
-                </div>
-              </div>
-
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-400' : 'opacity-0'
-                }`}>
-                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
-                  <DiscordIcon className="h-5 w-5 text-primary group-hover:-rotate-12 transition-transform duration-300" />
-                </div>
-                <div>
-                  <div className="font-medium group-hover:text-primary transition-colors duration-300">Discord</div>
-                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">azfar222</div>
-                </div>
-              </div>
-
-              <div className={`flex items-center gap-4 p-4 rounded-lg hover:bg-card/50 hover:scale-105 hover:translate-x-2 transition-all duration-300 cursor-pointer group ${isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'
-                }`}>
-                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 group-hover:scale-110 transition-all duration-300">
-                  <MapPin className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
-                </div>
-                <div>
-                  <div className="font-medium group-hover:text-primary transition-colors duration-300">Location</div>
-                  <div className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">Toronto, Ontario</div>
-                </div>
-              </div>
-            </div>
-          </div>
+            <ul className="contact__list">
+              <li className="contact__row">
+                <Mail aria-hidden="true" />
+                <span className="contact__key">Email</span>
+                <a href={links.mailto} className="contact__val">
+                  {links.email}
+                </a>
+              </li>
+              <li className="contact__row">
+                <DiscordIcon />
+                <span className="contact__key">Discord</span>
+                <span className="contact__val">azfar222</span>
+              </li>
+              <li className="contact__row">
+                <MapPin aria-hidden="true" />
+                <span className="contact__key">Location</span>
+                <span className="contact__val">Toronto, Ontario</span>
+              </li>
+            </ul>
+          </Reveal>
 
           {/* Contact Form */}
-          <Card className={`p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group ${isVisible ? "animate-bounce-only animate-delay-400" : "opacity-0"}`}>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className={`space-y-2 ${isVisible ? 'animate-slide-in-left animate-delay-600' : 'opacity-0'}`}>
-                  <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Name</label>
-                  <Input
-                    name="name"
-                    placeholder="Your name"
-                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300"
-                    required
-                  />
+          <Reveal className="contact__form" delay={120}>
+            {sentName !== null ? (
+              <div className="form__done" role="status">
+                <span className="form__done-icon" aria-hidden="true">
+                  <Check />
+                </span>
+                <h3 className="form__done-title">Message sent successfully!</h3>
+                <p className="form__done-text">
+                  Thanks for reaching out{sentName ? `, ${sentName}` : ""}! Your message is in my inbox.
+                </p>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={() => setSentName(null)}>
+                  Send another message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="form" noValidate>
+                <div className="form__row">
+                  <div className="field" data-invalid={errors.name ? "" : undefined}>
+                    <label htmlFor="contact-name">Name</label>
+                    <input {...fieldProps("name")} placeholder="Your name" autoComplete="name" required />
+                    {fieldError("name")}
+                  </div>
+                  <div className="field" data-invalid={errors.email ? "" : undefined}>
+                    <label htmlFor="contact-email">Email</label>
+                    <input
+                      {...fieldProps("email")}
+                      type="email"
+                      inputMode="email"
+                      placeholder="your.email@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                    {fieldError("email")}
+                  </div>
                 </div>
-                <div className={`space-y-2 ${isVisible ? 'animate-slide-in-right animate-delay-600' : 'opacity-0'}`}>
-                  <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Email</label>
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    className="hover:border-primary/50 focus:scale-105 transition-all duration-300"
-                    required
-                  />
+
+                <div className="field" data-invalid={errors.subject ? "" : undefined}>
+                  <label htmlFor="contact-subject">Subject</label>
+                  <input {...fieldProps("subject")} placeholder="Project inquiry" required />
+                  {fieldError("subject")}
                 </div>
-              </div>
 
-              <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-800' : 'opacity-0'}`}>
-                <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Subject</label>
-                <Input
-                  name="subject"
-                  placeholder="Project inquiry"
-                  className="hover:border-primary/50 focus:scale-105 transition-all duration-300"
-                  required
-                />
-              </div>
-
-              <div className={`space-y-2 ${isVisible ? 'animate-fade-in-up animate-delay-1000' : 'opacity-0'}`}>
-                <label className="text-sm font-medium hover:text-primary transition-colors duration-300">Message</label>
-                <Textarea
-                  name="message"
-                  placeholder="Tell me about your project..."
-                  className="min-h-32 resize-none hover:border-primary/50 focus:scale-105 transition-all duration-300"
-                  required
-                />
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300 ${isVisible ? 'animate-bounce-only animate-delay-1200' : 'opacity-0'}`}
-              >
-                <Send className="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </Button>
-
-              {/* Status Messages */}
-              {submitStatus === 'success' && (
-                <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg text-center">
-                  <p className="text-green-400 font-medium">✅ Message sent successfully!</p>
+                <div className="field" data-invalid={errors.message ? "" : undefined}>
+                  <label htmlFor="contact-message">Message</label>
+                  <textarea {...fieldProps("message")} placeholder="Tell me about your project..." required />
+                  <div className="field__foot">
+                    {fieldError("message")}
+                    <span
+                      className="field__count"
+                      data-near={messageLength > CONTACT_LIMITS.message * 0.9 ? "" : undefined}
+                      aria-hidden="true"
+                    >
+                      {messageLength} / {CONTACT_LIMITS.message}
+                    </span>
+                  </div>
                 </div>
-              )}
 
-              {submitStatus === 'error' && (
-                <div className="p-3 bg-red-600/20 border border-red-500/50 rounded-lg text-center">
-                  <p className="text-red-400 font-medium">❌ {errorMessage || 'Failed to send message. Please try again.'}</p>
+                {/* Spam trap: hidden from people, tempting for bots. Leave it empty. */}
+                <div className="form__hp" aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" ref={honeypotRef} />
                 </div>
-              )}
 
-              {submitStatus === 'rate-limited' && (
-                <div className="p-3 bg-yellow-600/20 border border-yellow-500/50 rounded-lg text-center">
-                  <p className="text-yellow-400 font-medium">⏰ {errorMessage}</p>
+                <button type="submit" disabled={isSubmitting} className="btn btn--accent form__submit">
+                  {isSubmitting ? <span className="spinner" aria-hidden="true" /> : <Send />}
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </button>
+
+                {/* Status Messages */}
+                <div className="form__live" role="status" aria-live="polite">
+                  {notice && (
+                    <div className={`form__status form__status--${notice.kind === "unavailable" ? "error" : notice.kind}`}>
+                      <p>{notice.message}</p>
+                      {notice.kind !== "rate-limited" && (
+                        <a href={mailtoFallback} className="form__fallback">
+                          Send it from your email app instead
+                          <ArrowUpRight />
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
-            </form>
-          </Card>
-        </div>
-
-        {/* Footer */}
-        <div
-          className={`mt-16 pt-8 border-t border-border ${isVisible ? "opacity-100 animate-fade-in-up animate-delay-800" : "opacity-0"}`}
-        >
-          <div className="flex flex-col md:flex-row items-start gap-8 mb-8">
-            {/* Left Side - Brand & Social */}
-            <div className="space-y-4 md:flex-[2]">
-              <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-foreground bg-clip-text text-transparent">
-                Azfar Jamil
-              </h3>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                Building digital experiences with passion and precision. Let's create something amazing together.
-              </p>
-              <div className="flex gap-4">
-                <a href="https://github.com/azfarj09" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all" aria-label="GitHub">
-                  <Github className="w-5 h-5" />
-                </a>
-                <a href="https://www.linkedin.com/in/azfar-jamil-83b36a38b/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all" aria-label="LinkedIn">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="mailto:azfarj09@gmail.com" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all" aria-label="Email">
-                  <Mail className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-
-            {/* Center - Contact */}
-            <div className="md:flex-1">
-              <h4 className="text-sm font-semibold mb-4">Contact</h4>
-              <div className="flex flex-col gap-2">
-                <a href="mailto:azfarj09@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">azfarj09@gmail.com</a>
-                <p className="text-sm text-muted-foreground">Toronto, Ontario</p>
-                <p className="text-sm text-muted-foreground">Discord: azfar222</p>
-              </div>
-            </div>
-
-            {/* Right Side - Quick Links */}
-            <div className="md:flex-1">
-              <h4 className="text-sm font-semibold mb-4">Quick Links</h4>
-              <div className="flex flex-col gap-2">
-                <a href="#about" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">About</a>
-                <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">Projects</a>
-                <a href="#blog" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">Blog</a>
-                <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground hover:translate-x-1 transition-all">Contact</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center pt-6 border-t border-border">
-            <p className="text-muted-foreground text-sm">© 2025 Azfar Jamil. Built with Next.js and Tailwind CSS.</p>
-          </div>
+              </form>
+            )}
+          </Reveal>
         </div>
       </div>
     </section>

@@ -4,23 +4,31 @@ import { Projects } from "@/components/projects"
 import { Blog } from "@/components/blog"
 import { Contact } from "@/components/contact"
 import { Navigation } from "@/components/navigation"
+import { Footer } from "@/components/footer"
+import { calculateAge } from "@/lib/utils"
 
 export default function Home() {
+  // Worked out once here so the server-rendered HTML and the browser agree;
+  // the components then keep it up to date on the client.
+  const age = calculateAge()
+
   return (
     <>
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50">
+      <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      
+
       <Navigation />
-      
-      <main id="main-content" className="min-h-screen bg-background">
-        <Hero />
+
+      <main id="main-content">
+        <Hero age={age} />
         <About />
         <Projects />
-        <Blog />
+        <Blog age={age} />
         <Contact />
       </main>
+
+      <Footer />
     </>
   )
 }

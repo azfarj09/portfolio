@@ -1,96 +1,116 @@
-"use client"
+import { ArrowDown, Github, Linkedin, Mail } from "lucide-react"
+import { PlayIcon } from "@/components/icons"
+import { LiveAge } from "@/components/live-age"
+import { links, technologies } from "@/lib/site-data"
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Github, Linkedin, Mail, ArrowDown } from "lucide-react"
-import { useTypingEffect } from "@/hooks/use-typing-effect"
-import { calculateAge } from "@/lib/utils"
-
-export function Hero() {
-  const [mounted, setMounted] = useState(false)
-  const age = calculateAge()
-  const { displayedText: typedName, isComplete } = useTypingEffect({
-    text: "Azfar Jamil",
-    speed: 150,
-    delay: 500
-  })
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
-
+/** Scrolling strip of technologies under the hero. Purely decorative. */
+function Ticker() {
+  // The list is rendered twice so the loop has no visible seam.
   return (
-    <section
-      id="hero"
-      aria-label="Introduction to Azfar Jamil, Full Stack Developer"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
-      itemScope
-      itemType="https://schema.org/WPHeader"
-    >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
+    <div className="ticker" aria-hidden="true">
+      <div className="ticker__track">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="ticker__group">
+            {technologies.flatMap((tech) => [<span key={tech}>{tech}</span>, <i key={`${tech}-star`}>✦</i>])}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
-      {/* Floating elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-primary/20 animate-morphing-blob animate-float" />
-      <div className="absolute bottom-32 right-16 w-16 h-16 bg-accent/20 rounded-full animate-float animate-delay-400" />
-      <div className="absolute top-1/2 right-1/4 w-12 h-12 bg-primary/30 animate-morphing-blob animate-float animate-delay-800" />
-      <div className="absolute top-1/3 left-1/3 w-8 h-8 bg-accent/30 rounded-full animate-float animate-delay-600" />
-      <div className="absolute bottom-1/4 left-1/4 w-6 h-6 bg-primary/40 rounded-full animate-float animate-delay-1000" />
+export function Hero({ age }: { age: number }) {
+  return (
+    <>
+      <section
+        id="hero"
+        className="hero"
+        aria-label="Introduction to Azfar Jamil, Full Stack Developer"
+        itemScope
+        itemType="https://schema.org/WPHeader"
+      >
+        <div className="wrap hero__grid">
+          <div className="hero__meta">
+            <p className="hero__role">Full Stack Developer</p>
+            <p>Toronto, Ontario</p>
+          </div>
 
-      <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        <div className="space-y-8">
-          <div className="opacity-0 animate-hero-text-reveal">
-            <h1 className="text-6xl md:text-8xl font-bold text-balance bg-gradient-to-r from-primary via-accent to-foreground bg-clip-text text-transparent animate-text-shimmer">
-              {typedName}
-              <span className={`inline-block w-1 h-16 md:h-20 bg-primary ml-2 ${isComplete ? 'animate-pulse' : 'animate-blink'}`} />
+          <div className="hero__title">
+            <h1 className="hero__name">
+              <span className="hero__line">
+                <span>Azfar</span>
+              </span>{" "}
+              <span className="hero__line hero__line--serif">
+                <span>
+                  Jamil
+                  <span className="hero__dot" aria-hidden="true">
+                    .
+                  </span>
+                </span>
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mt-4 transform hover:scale-105 transition-transform duration-300">Full Stack Developer</p>
+
+            {/* Spinning sticker */}
+            <div className="badge" aria-hidden="true">
+              <svg className="badge__ring" viewBox="0 0 200 200">
+                <defs>
+                  <path id="hero-badge-ring" d="M100 100m-76 0a76 76 0 1 1 152 0a76 76 0 1 1-152 0" />
+                </defs>
+                <circle cx="100" cy="100" r="100" />
+                <text>
+                  <textPath href="#hero-badge-ring" textLength={470} lengthAdjust="spacing">
+                    FROM YOUTUBE TUTORIALS • TO REAL PROJECTS •
+                  </textPath>
+                </text>
+              </svg>
+              <PlayIcon className="badge__play" />
+            </div>
           </div>
 
-          <div className="opacity-0 animate-slide-in-left animate-delay-200">
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance hover:text-foreground transition-colors duration-300">
-              Hey! I'm a {age}-year-old who fell in love with coding by watching YouTube tutorials. What started as curiosity turned into building real projects!
+          <div className="hero__aside">
+            <p className="hero__lead">
+              Hey! I'm a <LiveAge initial={age} />-year-old who fell in love with coding by watching YouTube tutorials.
+              What started as curiosity turned into building real projects!
             </p>
-          </div>
-
-          <div className="opacity-0 animate-slide-in-right animate-delay-400">
-            <p className="text-base text-muted-foreground mb-8">
-              From <span className="text-primary font-semibold hover:text-accent transition-colors duration-300 cursor-default">YouTube tutorials</span> to building awesome websites - proving age is just a number in coding!
+            <p className="hero__sub">
+              From <span className="hl">YouTube tutorials</span> to building awesome websites - proving age is just a
+              number in coding!
             </p>
-          </div>
 
-          <div className="opacity-0 animate-scale-in-bounce animate-delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="animate-glow hover:animate-button-magic transform hover:scale-105 active:scale-95 transition-all duration-300" asChild>
-              <a href="#projects">
+            <div className="hero__actions">
+              <a href="#projects" className="btn btn--primary btn--down">
                 View My Work
+                <ArrowDown />
               </a>
-            </Button>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300" asChild>
-                <a href="https://github.com/azfarj09" target="_blank" rel="noopener noreferrer">
-                  <Github className="h-5 w-5" />
+              <div className="socials">
+                <a
+                  href={links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="icon-btn"
+                  aria-label="GitHub"
+                >
+                  <Github />
                 </a>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:-rotate-12 active:scale-95 transition-all duration-300" asChild>
-                <a href="https://www.linkedin.com/in/azfar-jamil-83b36a38b/" target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="h-5 w-5" />
+                <a
+                  href={links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="icon-btn"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin />
                 </a>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:text-primary hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300" asChild>
-                <a href="mailto:azfarj09@gmail.com?subject=Portfolio Contact&body=Hi Azfar,%0D%0A%0D%0AI found your portfolio and would like to get in touch.%0D%0A%0D%0ABest regards,">
-                  <Mail className="h-5 w-5" />
+                <a href={links.mailtoIntro} className="icon-btn" aria-label="Email">
+                  <Mail />
                 </a>
-              </Button>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 animate-scale-in-bounce animate-delay-1000">
-          <ArrowDown className="h-6 w-6 text-muted-foreground animate-bounce hover:text-primary hover:scale-125 transition-all duration-300 cursor-pointer" />
-        </div>
-      </div>
-    </section>
+      <Ticker />
+    </>
   )
 }

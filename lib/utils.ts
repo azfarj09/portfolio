@@ -18,7 +18,6 @@ export function calculateAge(birthDate: Date = BIRTHDAY): number {
   return age
 }
 
-export function replaceAgeInText(text: string): string {
-  const age = calculateAge()
+export function replaceAgeInText(text: string, age: number = calculateAge()): string {
   return text.replace(/\b12-year-old\b/g, `${age}-year-old`)
 }

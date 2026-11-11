@@ -1,126 +1,94 @@
 import { NextRequest, NextResponse } from 'next/server'
-import * as nodemailer from 'nodemailer'
 import { rateLimit } from '@/lib/rate-limit'
+import { cleanContactValues, validateContact } from '@/lib/contact'
+import { buildContactEmail, createMailer, isEmailConfigured } from '@/lib/mailer'
 
 export async function POST(request: NextRequest) {
+  // Read the submission. Anything that isn't valid JSON is rejected straight away.
+  let body: unknown
   try {
-    // Get client IP for rate limiting
-    const forwarded = request.headers.get('x-forwarded-for')
-    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown'
-    
-    // Apply rate limiting: 3 emails per 15 minutes per IP
-    const rateLimitResult = rateLimit(ip, 3, 15 * 60 * 1000)
-    
-    if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { 
-          message: 'Too many requests. Please try again later.',
-          retryAfter: rateLimitResult.retryAfter 
-        },
-        { 
-          status: 429,
-          headers: {
-            'Retry-After': rateLimitResult.retryAfter?.toString() || '900'
-          }
-        }
-      )
-    }
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ message: 'Invalid request' }, { status: 400 })
+  }
 
-    const { name, email, subject, message } = await request.json()
+  // Spam trap: real visitors never see the "website" field, so only bots fill it in.
+  // Pretend it worked so they don't learn to avoid it.
+  const trap = (body as { website?: unknown } | null)?.website
+  if (typeof trap === 'string' && trap.trim() !== '') {
+    return NextResponse.json({ message: 'Email sent successfully!' }, { status: 200 })
+  }
 
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { message: 'All fields are required' },
-        { status: 400 }
-      )
-    }
+  // Validate required fields
+  const values = cleanContactValues(body)
+  const errors = validateContact(values)
+  if (Object.keys(errors).length > 0) {
+    return NextResponse.json({ message: 'Please check the highlighted fields.', errors }, { status: 400 })
+  }
 
-    console.log('Environment variables:', {
-      EMAIL_USER: process.env.EMAIL_USER,
-      EMAIL_PASS: process.env.EMAIL_PASS ? 'Set' : 'Not set'
-    })
+  // Validate environment variables
+  if (!isEmailConfigured()) {
+    console.warn(
+      '[contact] EMAIL_USER / EMAIL_PASS are not set, so the form cannot send. ' +
+        'Add them to .env.local (or to Environment Variables on Vercel) and restart the server.'
+    )
+    return NextResponse.json(
+      { message: 'Email is not set up on this server yet.', code: 'not_configured' },
+      { status: 503 }
+    )
+  }
 
-    // Validate environment variables
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error('Email credentials not configured')
-    }
+  // Get client IP for rate limiting
+  const forwarded = request.headers.get('x-forwarded-for')
+  const ip = forwarded ? forwarded.split(',')[0].trim() : request.headers.get('x-real-ip') || 'unknown'
 
-    // Create transporter with Gmail
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+  // Apply rate limiting: 3 emails per 15 minutes per IP
+  const rateLimitResult = rateLimit(ip, 3, 15 * 60 * 1000)
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      {
+        message: 'Too many requests. Please try again later.',
+        retryAfter: rateLimitResult.retryAfter
       },
-      tls: {
-        rejectUnauthorized: false
+      {
+        status: 429,
+        headers: {
+          'Retry-After': rateLimitResult.retryAfter?.toString() || '900'
+        }
       }
-    })
+    )
+  }
 
-    // Test the connection
-    await transporter.verify()
-    console.log('SMTP connection verified')
-
-    // Email options
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER, // Send to yourself
-      subject: `Portfolio Contact: ${subject}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-            New Contact Form Submission
-          </h2>
-          
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Subject:</strong> ${subject}</p>
-          </div>
-          
-          <div style="background-color: #fff; padding: 20px; border-left: 4px solid #007bff; margin: 20px 0;">
-            <h3 style="color: #333; margin-top: 0;">Message:</h3>
-            <p style="line-height: 1.6; color: #555;">${message}</p>
-          </div>
-          
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="color: #888; font-size: 12px;">
-              This email was sent from your portfolio contact form
-            </p>
-          </div>
-        </div>
-      `,
-      replyTo: email, // So you can reply directly to the sender
-    }
-
+  try {
     // Send email
-    const result = await transporter.sendMail(mailOptions)
-    console.log('Email sent successfully:', result.messageId)
+    const result = await createMailer().sendMail(buildContactEmail(values))
+    console.log('[contact] Email sent:', result.messageId)
 
     return NextResponse.json(
-      { 
+      {
         message: 'Email sent successfully!',
-        remaining: rateLimitResult.remaining 
+        remaining: rateLimitResult.remaining
       },
       { status: 200 }
     )
   } catch (error) {
-    console.error('Detailed error:', error)
-    
-    // Return more specific error message
-    let errorMessage = 'Failed to send email'
-    if (error instanceof Error) {
-      errorMessage = error.message
+    console.error('[contact] Sending failed:', error)
+
+    // Point at the usual causes in the server log. Visitors only get a generic message.
+    const code = (error as { code?: string }).code
+    const text = error instanceof Error ? error.message : ''
+    if (code === 'EAUTH') {
+      console.error(
+        '[contact] The mail server rejected the login. For Gmail, EMAIL_PASS must be a Google App Password, not the normal account password.'
+      )
+    } else if (/certificate|self.signed|verify/i.test(text)) {
+      console.error(
+        '[contact] The mail server certificate could not be verified. An antivirus or network is probably intercepting the connection. ' +
+          'For local development only, set EMAIL_ALLOW_UNVERIFIED_TLS=true in .env.local.'
+      )
     }
-    
-    return NextResponse.json(
-      { 
-        message: 'Failed to send email',
-        error: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? error : undefined
-      },
-      { status: 500 }
-    )
+
+    return NextResponse.json({ message: 'Failed to send email', code: 'send_failed' }, { status: 500 })
   }
 }
