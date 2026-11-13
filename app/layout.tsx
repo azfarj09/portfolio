@@ -106,12 +106,14 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // Google wants favicons that are a multiple of 48px square (or an SVG),
+  // so the PNG here is 192x192. favicon.ico (16 + 32px) is for old browsers.
   icons: {
     icon: [
-      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.svg', type: 'image/svg+xml' }
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
-    shortcut: '/favicon.png',
+    shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
