@@ -965,6 +965,8 @@ body::before {
 }
 
 .stack__count {
+  flex-shrink: 0;
+  white-space: nowrap; /* keep "( 12 )" on one line; the title wraps instead */
   font-family: var(--ff-mono);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
