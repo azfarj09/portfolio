@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { Reveal } from "@/components/reveal"
-import { technologies } from "@/lib/site-data"
+import { TechPill } from "@/components/tech-pill"
+import { techGroups, technologies } from "@/lib/site-data"
 
 // The three chapters of the journey, in order.
 const journey: { name: string; text: ReactNode }[] = [
@@ -72,24 +73,27 @@ export function About() {
           ))}
         </ol>
 
-        <Reveal className="stack">
-          <div className="stack__head">
-            <h3 className="stack__title">Technologies I work with</h3>
-            <span className="stack__count" aria-hidden="true">
-              ( {technologies.length} )
-            </span>
-          </div>
-          <ul className="stack__grid">
-            {technologies.map((tech, index) => (
-              <li key={tech} className="stack__item">
-                <span className="stack__idx" aria-hidden="true">
-                  {twoDigits(index + 1)}
-                </span>
-                <span className="stack__name">{tech}</span>
-              </li>
+        <div className="stack">
+          <Reveal as="h3" className="stack__title">
+            Technologies I <em>work with</em>
+            <sup className="stack__count" aria-hidden="true">
+              ({technologies.length})
+            </sup>
+          </Reveal>
+
+          <div className="stack__rows">
+            {techGroups.map((group, groupIndex) => (
+              <Reveal key={group.name} className="stack__row" delay={groupIndex * 70}>
+                <h4 className="stack__group">{group.name}</h4>
+                <ul className="stack__names">
+                  {group.items.map((tech) => (
+                    <TechPill key={tech} name={tech} />
+                  ))}
+                </ul>
+              </Reveal>
             ))}
-          </ul>
-        </Reveal>
+          </div>
+        </div>
       </div>
     </section>
   )

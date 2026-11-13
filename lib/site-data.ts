@@ -7,20 +7,16 @@ export const navItems = [
   { name: "Contact", href: "#contact" },
 ] as const
 
-export const technologies = [
-  "JavaScript",
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Node.js",
-  "Python",
-  "PostgreSQL",
-  "MongoDB",
-  "AWS",
-  "Docker",
-  "GraphQL",
-  "Tailwind CSS",
+// Grouped for the "Technologies I work with" list in the About section
+export const techGroups = [
+  { name: "Languages", items: ["JavaScript", "TypeScript", "Python"] },
+  { name: "Frontend", items: ["React", "Next.js", "Tailwind CSS"] },
+  { name: "Backend", items: ["Node.js", "GraphQL"] },
+  { name: "Databases", items: ["PostgreSQL", "MongoDB"] },
+  { name: "Cloud & tools", items: ["AWS", "Docker"] },
 ] as const
+
+export const technologies = techGroups.flatMap((group) => group.items)
 
 export const links = {
   github: "https://github.com/azfarj09",
